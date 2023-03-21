@@ -8,9 +8,7 @@ function Rent() {
 
 	return (
 		<div className="rent-page">
-			<Container fluid>
-				{type === "landlord" ? <LandlordRent /> : <TenantRent />}
-			</Container>
+			{type === "landlord" ? <LandlordRent /> : <TenantRent />}
 		</div>
 	);
 }

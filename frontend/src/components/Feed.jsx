@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import Button from "react-bootstrap/esm/Button";
-import Container from "react-bootstrap/esm/Container";
 import Row from "react-bootstrap/esm/Row";
 import { useNavigate } from "react-router-dom";
-import { getProperties } from "../api/fetcher";
-import { AddCard, ListingCards } from "./Cards";
+import { getListings, getProperties } from "../api/fetcher";
+import { AddCard, ListingCards, PropertyCards } from "./Cards";
 import Rating from "./Rating";
 
 export function LandlordHome() {
@@ -15,29 +14,27 @@ export function LandlordHome() {
 	const rating = 69;
 
 	return (
-		<div className="home-page">
-			<Container fluid>
-				<Row>
-					<div className="rating">
-						<h2>Landlord Rating</h2>
-						<Rating percentage={rating} />
-					</div>
-				</Row>
-				<Row>
-					<Button className="view-rent-btn" onClick={() => navigate("/rent")}>
-						View Rent
-					</Button>
-				</Row>
-				<Row>
-					<Button
-						className="view-payments-btn"
-						onClick={() => navigate("/payments")}
-					>
-						View Payments
-					</Button>
-				</Row>
-			</Container>
-		</div>
+		<>
+			<Row>
+				<div className="rating">
+					<h2>Landlord Rating</h2>
+					<Rating percentage={rating} />
+				</div>
+			</Row>
+			<Row>
+				<Button className="view-rent-btn" onClick={() => navigate("/rent")}>
+					View Rent
+				</Button>
+			</Row>
+			<Row>
+				<Button
+					className="view-payments-btn"
+					onClick={() => navigate("/payments")}
+				>
+					View Payments
+				</Button>
+			</Row>
+		</>
 	);
 }
 
@@ -45,7 +42,7 @@ export function LandlordRent() {
 	// Landlord listings
 	const [listings, setListings] = useState(null);
 	const fetchListings = async () => {
-		setListings(await getProperties(0));
+		setListings(await getListings(0));
 	};
 
 	// Landlord properties
@@ -62,7 +59,7 @@ export function LandlordRent() {
 
 	// Render
 	return (
-		<div className="rent-page">
+		<>
 			<Row>
 				<h2>My Listings</h2>
 			</Row>
@@ -74,10 +71,10 @@ export function LandlordRent() {
 				<h2>My Properties</h2>
 			</Row>
 			<Row xs="auto">
-				<ListingCards listings={properties} />
+				<PropertyCards properties={properties} />
 				<AddCard />
 			</Row>
-		</div>
+		</>
 	);
 }
 

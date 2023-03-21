@@ -1,0 +1,57 @@
+[
+	{
+		"listing_id": 0,
+		"property_id": 0,
+		"landlord_id": 0,
+		"title": "THE Braking Bad House!",
+		"description": "Rent this house from the popular tv show Braking Bad!",
+		"pet_flag": false,
+		"price": 800,
+		"name": "Breaking Bad House",
+		"address": "308 Negra Arroyo Lane, Albuquerque, New Mexico, 87104",
+		"bedrooms": 3,
+		"bathrooms": 1,
+		"picture": "https://static.wikia.nocookie.net/breakingbad/images/6/6c/White_Residence.png"
+	},
+	{
+		"listing_id": 1,
+		"property_id": 1,
+		"landlord_id": 0,
+		"title": "CONDO. DOMENECH, 3-2, ENSERES, C/A, PKG",
+		"description": "Amplio, cómodo y fresco apartamento de 3 cuartos, 2 baños completos, sala comedor, cocina y dos balcones. Se deja con: nevera, estufa, lavadora, secadora y aire acondicionado en cada uno de los cuartos dormitorios. El condominio cuenta con una hermosa y acogedora área de looby, ascensor y un estacionamiento bajo techo con control de acceso. A pasos de la carretera # 2, de la universidad y del centro del pueblo. Seguro le encantará!\r\rSpacious, comfortable and fresh apartment with 3 bedrooms, 2 full bathrooms, dining room, kitchen and two balconies. It is left with: refrigerator, stove, washer, dryer and air conditioning in each of the fourth bedrooms. The condominium has a beautiful and cozy looby area, elevator and a covered parking with access control. A few steps from highway # 2, the university and the town center. You will surely love it!",
+		"pet_flag": true,
+		"price": 1300,
+		"name": "Condo. Domenech",
+		"address": "Condo. Domenech, Mayagüez, 00680, Puerto Rico",
+		"bedrooms": 3,
+		"bathrooms": 2,
+		"picture": "https://mediavault.point2.com/p2h/listing/070a/80e0/e64f/df3840a6ad42a3abc8a1/wm_w640h425.jpg"
+	},
+	{
+		"listing_id": 2,
+		"property_id": 2,
+		"landlord_id": 0,
+		"title": "Apartamento en alquiler en Condominio Maranelo Boutique, Mayagüez📍",
+		"description": "Accede al enlace para ver más fotos, detalles, e información de contacto: https://finditpr.com/propiedad/104-Mayaguez-PR-00680/426",
+		"pet_flag": true,
+		"price": 700,
+		"name": "Maranelo",
+		"address": "308 Negra Arroyo Lane, Albuquerque, New Mexico, 87104",
+		"bedrooms": 2,
+		"bathrooms": 1,
+		"picture": "https://scontent.fsig3-1.fna.fbcdn.net/v/t1.6435-9/131125537_411554150297314_6955108436779414473_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=730e14&_nc_ohc=1lLep3TkPf4AX85PBsq&_nc_ht=scontent.fsig3-1.fna&oh=00_AfDb5rwNqRZmfgTW_HOYIJJLApDhQnK_2mf5qVqzAvdXYw&oe=64320AD3"
+	},
+	{
+		"listing_id": 3,
+		"property_id": 3,
+		"landlord_id": 0,
+		"title": "La Palma Apartments",
+		"description": "Rent an apartment close to UPRM!",
+		"price": 600,
+		"name": "La Palma",
+		"address": "Barrio-Pueblo Mayagüez, 00640, Puerto Rico",
+		"bedrooms": 4,
+		"bathrooms": 1,
+		"picture": "https://www.clasificadosonline.com/FF/FR/2022/7/7/07072022150447n2ot1snr.PNG"
+	}
+]

@@ -11,7 +11,7 @@ export default function Navigation() {
 	return (
 		<Navbar expand="sm" collapseOnSelect>
 			<Container fluid>
-				<Navbar.Brand href={"#/home"}>
+				<Navbar.Brand href={"#/listings"}>
 					<div className=".navbar-brand">
 						<img
 							alt="Logo"

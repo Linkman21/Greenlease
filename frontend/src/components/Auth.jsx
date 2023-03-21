@@ -38,7 +38,7 @@ export function Login({ setFieldErrorShow, setUserErrorShow }) {
 			return;
 		}
 
-		navigate("/home");
+		navigate("/listings");
 	};
 
 	useEffect(() => {
@@ -122,7 +122,7 @@ export function Register({ setFieldErrorShow }) {
 			return;
 		}
 
-		navigate("/home");
+		navigate("/listings");
 	};
 
 	useEffect(() => {
