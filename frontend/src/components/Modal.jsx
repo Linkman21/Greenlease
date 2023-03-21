@@ -7,13 +7,13 @@ export function EmptyFields({ open, setOpen }) {
 		<Modal show={open} onHide={() => setOpen(false)} size="lg" centered>
 			<Modal.Header>
 				<Modal.Title>
-					<h1>Empty Fields Error</h1>
+					<h1>Error: Empty Fields</h1>
 				</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
 				<h2>
-					Please make sure all fields are filled out including whether you are a
-					tenant or landlord.
+					Fields are missing. Make sure to select whether you are a tenant or
+					landlord.
 				</h2>
 			</Modal.Body>
 			<Modal.Footer>
@@ -34,11 +34,11 @@ export function UserNotFound({ open, setOpen }) {
 		<Modal show={open} onHide={() => setOpen(false)} size="lg" centered>
 			<Modal.Header>
 				<Modal.Title>
-					<h1>User Not Found</h1>
+					<h1>Error: User Not Found</h1>
 				</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
-				<h2>Please make sure all you entered the correct information.</h2>
+				<h2>Incorrect username or password</h2>
 			</Modal.Body>
 			<Modal.Footer>
 				<Button
@@ -53,21 +53,41 @@ export function UserNotFound({ open, setOpen }) {
 	);
 }
 
-export function PropertyView({ open, setOpen }) {
+export function ListingView({ open, setOpen, listing }) {
 	return (
 		<Modal show={open} onHide={() => setOpen(false)} size="lg" centered>
 			<Modal.Header>
 				<Modal.Title id="contained-modal-title-vcenter">
-					Barrio-Pueblo Mayagüez, 00640, Puerto Rico
+					{listing.address}
 				</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
-				<h4>La Palma </h4>
-				<p>
-					Se rentan apartamentos desde $450 (1 Cuarto) a $600 (2 Cuartos). A
-					pasos de la alcaldia de Mayaguez, Restaurantes, Hospitales, y a
-					minutos del Colegio de Mayaguez. Incluyen Agua y Luz!
-				</p>
+				<h4>{listing.title}</h4>
+				<p>{listing.description}</p>
+				<Map />
+			</Modal.Body>
+			<Modal.Footer>
+				<Button
+					variant="secondary"
+					type="button"
+					onClick={() => setOpen(false)}
+				>
+					Close
+				</Button>
+			</Modal.Footer>
+		</Modal>
+	);
+}
+
+export function PropertyView({ open, setOpen, property }) {
+	return (
+		<Modal show={open} onHide={() => setOpen(false)} size="lg" centered>
+			<Modal.Header>
+				<Modal.Title id="contained-modal-title-vcenter">
+					{property.address}
+				</Modal.Title>
+			</Modal.Header>
+			<Modal.Body>
 				<Map />
 			</Modal.Body>
 			<Modal.Footer>

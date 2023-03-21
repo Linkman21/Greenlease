@@ -8,9 +8,7 @@ function Home() {
 
 	return (
 		<div className="home-page">
-			<Container fluid>
-				{type === "landlord" ? <LandlordHome /> : <TenantHome />}
-			</Container>
+			{type === "landlord" ? <LandlordHome /> : <TenantHome />}
 		</div>
 	);
 }

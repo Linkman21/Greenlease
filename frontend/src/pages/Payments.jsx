@@ -8,9 +8,7 @@ function Payments() {
 
 	return (
 		<div className="payments-page">
-			<Container fluid>
-				{type === "landlord" ? <LandlordPayments /> : <TenantPayments />}
-			</Container>
+			{type === "landlord" ? <LandlordPayments /> : <TenantPayments />}
 		</div>
 	);
 }

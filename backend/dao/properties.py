@@ -2,7 +2,7 @@ from config.credentials import pg_config
 import psycopg2
 
 
-class UsersDAO:
+class PropertiesDAO:
     def __init__(self):
         connection_url = "dbname=%s user=%s password=%s port=%s host=%s" % (pg_config['dbname'],
                                                                             pg_config['user'],
@@ -12,8 +12,8 @@ class UsersDAO:
         self.conn = psycopg2.connect(connection_url)
 
     # SELECT
-    def getAllUsers(self):
-        query = "select * from users;"
+    def getAllProperties(self):
+        query = "select * from properties;"
         cursor = self.conn.cursor()
         cursor.execute(query)
         result = []
@@ -23,18 +23,19 @@ class UsersDAO:
         cursor.close()
         return result
 
-    def getUser(self, email, password):
-        query = "select user_id, email, password, first_name, last_name, phone from users where email = %s and password = %s;"
+    def getProperty(self, landlord_id):
+        query = "select property_id, landlord_id, address, bedrooms, bathrooms, pictures from properties where landlord_id = %s;"
         cursor = self.conn.cursor()
-        cursor.execute(query, (email, password,))
+        cursor.execute(query, (landlord_id,))
         return cursor.fetchone()
 
     # INSERT
-    def addUser(self, email, password, first_name, last_name, phone):
-        query = "insert into users(email, password, first_name, last_name, phone) values(%s, %s, %s, %s, %s) returning user_id;"
+    def addProperty(self, landlord_id, address, bedrooms, bathrooms, pictures):
+        query = "insert into properties(landlord_id, address, bedrooms, bathrooms, pictures) values(%s, %s, %s, %s, %s) returning property_id;"
         cursor = self.conn.cursor()
-        cursor.execute(query, (email, password, first_name, last_name, phone))
-        user_id = cursor.fetchone()[0]
+        cursor.execute(query, (landlord_id, address,
+                       bedrooms, bathrooms, pictures))
+        property_id = cursor.fetchone()[0]
         self.conn.commit()
         cursor.close()
-        return user_id
+        return property_id

@@ -1,88 +1,95 @@
-import { useState } from "react";
-import Card from "react-bootstrap/Card";
+import { useEffect, useState } from "react";
 import Button from "react-bootstrap/esm/Button";
-import Col from "react-bootstrap/esm/Col";
-import Container from "react-bootstrap/esm/Container";
 import Row from "react-bootstrap/esm/Row";
-import { PropertyView } from "./Modal";
+import { useNavigate } from "react-router-dom";
+import { getListings, getProperties } from "../api/fetcher";
+import { AddCard, ListingCards, PropertyCards } from "./Cards";
 import Rating from "./Rating";
 
 export function LandlordHome() {
-	// Testing w/o API
+	// Navigation object
+	const navigate = useNavigate();
 
 	// Landlord Rating
 	const rating = 69;
 
-	// Landlord properties
-	const properties_test = [
-		{
-			name: "terrace",
-			location: "close",
-			img: "https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-		},
-		{
-			name: "pueblo",
-			location: "close",
-			img: "https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-		},
-		{
-			name: "miradero",
-			location: "far",
-			img: "https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-		},
-	];
-
-	const [openView, setOpenView] = useState(false);
-
-	// Properties in cards
-	const properties = properties_test.map((value, index) => {
-		return (
-			<Col key={index}>
-				<Card style={{ width: "18rem" }}>
-					<Card.Img variant="top" src={value.img} />
-					<Card.Body>
-						<Card.Title>{value.name}</Card.Title>
-						<Card.Text>{value.location}</Card.Text>
-						<Button variant="primary" onClick={() => setOpenView(true)}>
-							View
-						</Button>
-					</Card.Body>
-				</Card>
-			</Col>
-		);
-	});
-
 	return (
-		<div className="home-page">
-			<Container fluid>
-				<Row>
-					<div className="rating">
-						<h2>Landlord Rating</h2>
-						<Rating percentage={rating} />
-					</div>
-				</Row>
-				<Row>
-					<h2>My Property</h2>
-				</Row>
-				<Row>{properties}</Row>
-			</Container>
-			<PropertyView open={openView} setOpen={setOpenView} />
-		</div>
+		<>
+			<Row>
+				<div className="rating">
+					<h2>Landlord Rating</h2>
+					<Rating percentage={rating} />
+				</div>
+			</Row>
+			<Row>
+				<Button className="view-rent-btn" onClick={() => navigate("/rent")}>
+					View Rent
+				</Button>
+			</Row>
+			<Row>
+				<Button
+					className="view-payments-btn"
+					onClick={() => navigate("/payments")}
+				>
+					View Payments
+				</Button>
+			</Row>
+		</>
 	);
 }
 
 export function LandlordRent() {
-	return <div>Landlord Rent</div>;
+	// Landlord listings
+	const [listings, setListings] = useState(null);
+	const fetchListings = async () => {
+		setListings(await getListings(0));
+	};
+
+	// Landlord properties
+	const [properties, setProperties] = useState(null);
+	const fetchProperties = async () => {
+		setProperties(await getProperties(0));
+	};
+
+	// On component mount
+	useEffect(() => {
+		fetchListings();
+		fetchProperties();
+	}, []);
+
+	// Render
+	return (
+		<>
+			<Row>
+				<h2>My Listings</h2>
+			</Row>
+			<Row xs="auto">
+				<ListingCards listings={listings} />
+				<AddCard />
+			</Row>
+			<Row>
+				<h2>My Properties</h2>
+			</Row>
+			<Row xs="auto">
+				<PropertyCards properties={properties} />
+				<AddCard />
+			</Row>
+		</>
+	);
 }
+
 export function LandlordPayments() {
 	return <div>Landlord Payments</div>;
 }
+
 export function TenantHome() {
 	return <div>Tenant Home</div>;
 }
+
 export function TenantRent() {
 	return <div>Tenant Rent</div>;
 }
+
 export function TenantPayments() {
 	return <div>Tenant Payments</div>;
 }

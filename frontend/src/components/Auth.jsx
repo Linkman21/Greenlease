@@ -4,6 +4,7 @@ import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import { useNavigate } from "react-router-dom";
+import { getUser } from "../api/fetcher";
 
 export function Login({ setFieldErrorShow, setUserErrorShow }) {
 	// React-router navigation object
@@ -13,19 +14,12 @@ export function Login({ setFieldErrorShow, setUserErrorShow }) {
 	const storage = window.localStorage;
 
 	// Fields
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
+	const [email, setEmail] = useState("heisenberg@gmail.com");
+	const [password, setPassword] = useState("123");
 	const [type, setType] = useState("");
 
-	// User attributes
-	// const [user, setUser] = useState({
-	// 	email: email,
-	// 	password: password,
-	// 	type: type,
-	// });
-
 	// Handle user login procedure
-	const handleLogin = () => {
+	const handleLogin = async () => {
 		// Check for empty fields
 		if (email === "" || password == "" || type == "") {
 			setFieldErrorShow(true);
@@ -33,20 +27,26 @@ export function Login({ setFieldErrorShow, setUserErrorShow }) {
 		}
 
 		// Check if user exists
-		// if (!getUser()) {
-		// 	setUserErrorShow(true);
-		// 	return;
-		// }
+		const user = await getUser({
+			email: email,
+			password: password,
+			type: type,
+		});
 
-		navigate("/home");
+		if (user === null) {
+			setUserErrorShow(true);
+			return;
+		}
+
+		navigate("/listings");
 	};
 
 	useEffect(() => {
-		window.localStorage.setItem("name", "Walter");
-		window.localStorage.setItem("phone", "1234567890");
-		window.localStorage.setItem("email", email);
-		window.localStorage.setItem("password", password);
-		window.localStorage.setItem("type", type);
+		storage.setItem("name", "Walter");
+		storage.setItem("phone", "1234567890");
+		storage.setItem("email", email);
+		storage.setItem("password", password);
+		storage.setItem("type", type);
 	}, [email, password, type]);
 
 	return (
@@ -76,7 +76,7 @@ export function Login({ setFieldErrorShow, setUserErrorShow }) {
 						<Form.Check
 							type="radio"
 							label="Tenant"
-							name="type"
+							name={type}
 							onClick={() => setType("tenant")}
 						/>
 					</Col>
@@ -84,7 +84,7 @@ export function Login({ setFieldErrorShow, setUserErrorShow }) {
 						<Form.Check
 							type="radio"
 							label="Landlord"
-							name="type"
+							name={type}
 							onClick={() => setType("landlord")}
 						/>
 					</Col>
@@ -122,7 +122,7 @@ export function Register({ setFieldErrorShow }) {
 			return;
 		}
 
-		navigate("/home");
+		navigate("/listings");
 	};
 
 	useEffect(() => {

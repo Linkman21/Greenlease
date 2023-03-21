@@ -12,6 +12,9 @@
 		"preview": "vite preview"
 	},
 	"dependencies": {
+		"@emotion/styled": "^11.10.6",
+		"@mui/icons-material": "^5.11.11",
+		"@mui/styled-engine": "^5.11.11",
 		"@react-google-maps/api": "^2.18.1",
 		"apexcharts": "^3.37.0",
 		"bootstrap": "^5.2.3",
