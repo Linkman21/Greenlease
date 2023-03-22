@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-from handlers.users import *
-from handlers.properties import *
+from backend.handlers.users import *
+from backend.handlers.properties import *
 from flask.helpers import send_from_directory
 
 # Activate
