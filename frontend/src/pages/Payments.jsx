@@ -1,10 +1,14 @@
-import Container from "react-bootstrap/esm/Container";
-import { LandlordPayments, TenantPayments } from "../components/Feed";
+import { useEffect, useState } from "react";
+import Button from "react-bootstrap/esm/Button";
+import Row from "react-bootstrap/esm/Row";
+import { useNavigate } from "react-router-dom";
+import { getListings, getProperties } from "../api/fetcher";
+import { AddCard, ListingCards, PropertyCards } from "../components/Cards";
+import Rating from "../components/Rating";
+import useLocalStorage from "../hooks/useLocalStorage";
 
-function Payments() {
-	const storage = window.localStorage;
-
-	const type = storage.getItem("type");
+export default function Payments() {
+	const [type, setType] = useLocalStorage("type", "");
 
 	return (
 		<div className="payments-page">
@@ -13,4 +17,10 @@ function Payments() {
 	);
 }
 
-export default Payments;
+export function LandlordPayments() {
+	return <div>Landlord Payments</div>;
+}
+
+function TenantPayments() {
+	return <div>Tenant Payments</div>;
+}

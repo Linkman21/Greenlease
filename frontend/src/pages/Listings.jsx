@@ -10,13 +10,13 @@ import { ListingCards } from "../components/Cards";
 
 export default function Listings() {
 	const [listings, setListings] = useState(null);
-	const getListings = async () => {
+	const fetchListings = async () => {
 		setListings(await getAllListings());
 	};
 
 	useEffect(() => {
-		getListings();
-	}, [listings]);
+		fetchListings();
+	}, []);
 
 	return (
 		<>
