@@ -24,10 +24,10 @@ class UsersHandler:
             result.append(dict)
         return jsonify(result)
 
-    def getUser(self, email, password):
+    def getUser(self, email, password, type):
         dao = UsersDAO()
         if email and password:
-            result = dao.getUser(email, password)
+            result = dao.getUser(email, password, type)
             if not result:
                 return jsonify("Not Found"), 404
             else:
@@ -36,11 +36,11 @@ class UsersHandler:
         return jsonify("Missing Arguments"), 404
 
     # POST
-    def addUser(self, email, password, first_name, last_name, phone):
-        if email and password and first_name and last_name and phone:
+    def addUser(self, email, password, first_name, last_name, phone, type):
+        if email and password and first_name and last_name and phone and type:
             dao = UsersDAO()
             user_id = dao.addUser(
-                email, password, first_name, last_name, phone)
+                email, password, first_name, last_name, phone, type)
             result = self.build_user_dict(
                 [user_id, email, password, first_name, last_name, phone])
             return jsonify(User=result), 201

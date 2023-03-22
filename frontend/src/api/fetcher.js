@@ -1,71 +1,72 @@
+// const url = ""
+const url = "http://127.0.0.1:5000";
+
+// Users
 export async function getUser({ email, password, type }) {
-	const api = "/Greenlease/data/users.json";
+	const api =
+		url +
+		"/api/users/?email=" +
+		email +
+		"&password=" +
+		password +
+		"&type=" +
+		type;
 	const response = await fetch(api);
 	const data = await response.json();
 
-	var result = null;
-	// result = [];
-
-	for (var index in data) {
-		console.log(data[index]);
-		if (
-			data[index].email == email &&
-			data[index].password == password &&
-			data[index].type == type
-		) {
-			result = data[index];
-		}
+	if (data === "Not Found") {
+		return null;
 	}
 
-	return result;
+	return data;
 }
 
-export async function getProperties(user_id) {
-	const api = "/Greenlease/data/properties.json";
+export async function addUser({ email, password, name, phone, type }) {
+	const api = url + "/api/users/?email=" + email + "&password=" + password;
 	const response = await fetch(api);
 	const data = await response.json();
 
-	var result = [];
-
-	for (var index in data) {
-		// console.log(data[index]);
-		if (data[index].landlord_id === user_id) {
-			result.push(data[index]);
-		}
+	if (data === "Not Found") {
+		return null;
 	}
 
-	return result;
+	return data;
+}
+
+// Properties
+export async function getProperties(user_id) {
+	const api = url + "/api/properties/?user_id=" + user_id;
+	const response = await fetch(api);
+	const data = await response.json();
+
+	if (data === "Not Found") {
+		return null;
+	}
+
+	return data;
+}
+
+// Listings
+export async function getAllListings() {
+	const api = url + "/api/listings";
+	const response = await fetch(api);
+	const data = await response.json();
+
+	if (data === "Not Found") {
+		return null;
+	}
+
+	return data;
 }
 
 export async function getListings(user_id) {
-	const api = "/Greenlease/data/listings.json";
+	const api = url + "/api/listings/?user_id:" + user_id;
 	const response = await fetch(api);
 	const data = await response.json();
 
-	var result = [];
-
-	for (var index in data) {
-		// console.log(data[index]);
-		if (data[index].landlord_id === user_id) {
-			result.push(data[index]);
-		}
+	if (data === "Not Found") {
+		return null;
 	}
 
-	return result;
-}
-
-export async function getAllListings() {
-	const api = "/Greenlease/data/listings.json";
-	const response = await fetch(api);
-	const data = await response.json();
-
-	var result = [];
-
-	for (var index in data) {
-		// console.log(data[index]);
-
-		result.push(data[index]);
-	}
-
-	return result;
+	return data;
 }

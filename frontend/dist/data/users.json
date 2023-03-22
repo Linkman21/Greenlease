@@ -1,0 +1,12 @@
+[
+	{
+		"user_id": 0,
+		"name": "Walter",
+		"lastname": "White",
+		"email": "heisenberg@gmail.com",
+		"password": "123",
+		"landlord_id": 0,
+		"type": "landlord",
+		"rating": 69
+	}
+]

@@ -1,15 +1,89 @@
 import { useState } from "react";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
+import Button from "react-bootstrap/esm/Button";
+import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
+import { useNavigate } from "react-router-dom";
+import { getUser } from "../api/fetcher";
 import logo from "../assets/logo_dark.svg";
-import { Login, Register } from "../components/Auth";
 import { EmptyFields, UserNotFound } from "../components/Modal";
+import useLocalStorage from "../hooks/useLocalStorage";
 
-function Landing() {
+export default function Landing() {
+	// React-router navigation object
+	const navigate = useNavigate();
+
 	// Error handlers
 	const [fieldErrorShow, setFieldErrorShow] = useState(false);
 	const [userErrorShow, setUserErrorShow] = useState(false);
+
+	// User details in local storage
+	const [userID, setUserID] = useLocalStorage("user_id", "");
+	const [email, setEmail] = useLocalStorage("email", "");
+	const [password, setPassword] = useLocalStorage("password", "");
+	const [name, setName] = useLocalStorage("name", "");
+	const [phone, setPhone] = useLocalStorage("phone", "");
+	const [type, setType] = useLocalStorage("type", "");
+
+	// Handle user login procedure
+	const handleLogin = async () => {
+		// Check for empty fields
+		if (email === "" || password == "" || type == "") {
+			setFieldErrorShow(true);
+			return;
+		}
+
+		// Check if user exists
+		const user = await getUser({
+			email: email,
+			password: password,
+			type: type,
+		});
+
+		if (user === null) {
+			setUserErrorShow(true);
+			return;
+		}
+
+		navigate("/listings");
+	};
+
+	// Handle user registration procedure
+	const handleRegister = async () => {
+		if (
+			email === "" ||
+			password == "" ||
+			type == "" ||
+			name == "" ||
+			phone == ""
+		) {
+			setFieldErrorShow(true);
+			return;
+		}
+
+		// Create user
+		const user = await addUser({
+			email: email,
+			password: password,
+			name: name,
+			phone: phone,
+			type: type,
+		});
+
+		navigate("/listings");
+	};
+
+	// Save user details
+	const saveUser = (user) => {
+		setUserID(user.user_id);
+		setEmail(user.email);
+		setPassword(user.password);
+		setFirstName(user.first_name);
+		setLastName(user.last_name);
+		setPhone(user.phone);
+		setType(user.type);
+	};
 
 	return (
 		<div className="landing-page">
@@ -23,17 +97,135 @@ function Landing() {
 					</Col>
 				</Row>
 				<Row>
+					{/* Login */}
 					<Col xs={12} md={5}>
-						<Login
-							setFieldErrorShow={setFieldErrorShow}
-							setUserErrorShow={setUserErrorShow}
-						/>
+						<Form>
+							<h2>Login</h2>
+							<Form.Group className="mb-3">
+								<Form.Label>Email</Form.Label>
+								<Form.Control
+									type="email"
+									value={email}
+									onChange={(e) => setEmail(e.target.value)}
+								/>
+							</Form.Group>
+
+							<Form.Group className="mb-3">
+								<Form.Label>Password</Form.Label>
+								<Form.Control
+									type="password"
+									value={password}
+									onChange={(e) => setPassword(e.target.value)}
+								/>
+							</Form.Group>
+
+							<Form.Group className="mb-3">
+								<Row>
+									<Col>
+										<Form.Check
+											type="radio"
+											label="Tenant"
+											name={type}
+											onClick={() => setType("tenant")}
+										/>
+									</Col>
+									<Col>
+										<Form.Check
+											type="radio"
+											label="Landlord"
+											name={type}
+											onClick={() => setType("landlord")}
+										/>
+									</Col>
+								</Row>
+							</Form.Group>
+
+							<Button variant="secondary" type="button" onClick={handleLogin}>
+								Login
+							</Button>
+						</Form>
 					</Col>
 					<Col xs={12} md={2}>
 						<div className="divider"></div>
 					</Col>
+					{/* Register */}
 					<Col xs={12} md={5}>
-						<Register setFieldErrorShow={setFieldErrorShow} />
+						<Form>
+							<h2>Register</h2>
+							<Row>
+								<Col xs={12} sm={6}>
+									<Form.Group className="mb-3">
+										<Form.Label>Name</Form.Label>
+										<Form.Control
+											type="text"
+											value={name}
+											onChange={(e) => setName(e.target.value)}
+										/>
+									</Form.Group>
+								</Col>
+								<Col>
+									<Form.Group className="mb-3">
+										<Form.Label>Phone</Form.Label>
+										<Form.Control
+											type="tel"
+											value={phone}
+											onChange={(e) => setPhone(e.target.value)}
+										/>
+									</Form.Group>
+								</Col>
+							</Row>
+							<Row>
+								<Col xs={12} sm={6}>
+									<Form.Group className="mb-3">
+										<Form.Label>Email</Form.Label>
+										<Form.Control
+											type="email"
+											value={email}
+											onChange={(e) => setEmail(e.target.value)}
+										/>
+									</Form.Group>
+								</Col>
+								<Col>
+									<Form.Group className="mb-3">
+										<Form.Label>Password</Form.Label>
+										<Form.Control
+											type="password"
+											value={password}
+											onChange={(e) => setPassword(e.target.value)}
+										/>
+									</Form.Group>
+								</Col>
+							</Row>
+
+							<Form.Group className="mb-3">
+								<Row>
+									<Col>
+										<Form.Check
+											type="radio"
+											label="Tenant"
+											name="type"
+											onClick={() => setType("tenant")}
+										/>
+									</Col>
+									<Col>
+										<Form.Check
+											type="radio"
+											label="Landlord"
+											name="type"
+											onClick={() => setType("landlord")}
+										/>
+									</Col>
+								</Row>
+							</Form.Group>
+
+							<Button
+								variant="secondary"
+								type="button"
+								onClick={handleRegister}
+							>
+								Register
+							</Button>
+						</Form>
 					</Col>
 				</Row>
 				<EmptyFields open={fieldErrorShow} setOpen={setFieldErrorShow} />
@@ -42,5 +234,3 @@ function Landing() {
 		</div>
 	);
 }
-
-export default Landing;

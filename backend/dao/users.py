@@ -23,18 +23,26 @@ class UsersDAO:
         cursor.close()
         return result
 
-    def getUser(self, email, password):
-        query = "select user_id, email, password, first_name, last_name, phone from users where email = %s and password = %s;"
+    def getUser(self, email, password, type):
+        query = "select user_id, email, password, first_name, last_name, phone from users natural join tenants where email = %s and password = %s;"
+        if type == 'landlord':
+            query = "select user_id, email, password, first_name, last_name, phone from users natural join landlords where email = %s and password = %s;"
         cursor = self.conn.cursor()
         cursor.execute(query, (email, password,))
         return cursor.fetchone()
 
     # INSERT
-    def addUser(self, email, password, first_name, last_name, phone):
+    def addUser(self, email, password, first_name, last_name, phone, type):
         query = "insert into users(email, password, first_name, last_name, phone) values(%s, %s, %s, %s, %s) returning user_id;"
         cursor = self.conn.cursor()
         cursor.execute(query, (email, password, first_name, last_name, phone))
+
         user_id = cursor.fetchone()[0]
+        query = "insert into tenants(user_id) values(%s)"
+        if type == "landlord":
+            query = "insert into landlords(user_id) values(%s)"
+        cursor.execute(query, (user_id,))
+
         self.conn.commit()
         cursor.close()
         return user_id

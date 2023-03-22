@@ -2,49 +2,51 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 from handlers.users import *
 from handlers.properties import *
+from flask.helpers import send_from_directory
 
 # Activate
-app = Flask(__name__)
+app = Flask(__name__, static_folder="../frontend/dist", static_url_path="")
 
 # Apply CORS to this app
 CORS(app)
 
 
 @app.route('/')
-def greeting():
-    return 'Hello! This is the Greenlease App!'
+def index():
+    return send_from_directory(app.static_folder, "index.html")
 
 # ============= Users ======================
 
 
-@app.route('/greenlease/users', methods=["GET"])
+@app.route('/api/users', methods=["GET"])
 def getAllUsers():
     return UsersHandler().getAllUsers()
 
 
-@app.route('/greenlease/users/', methods=["GET", "POST"])
+@app.route('/api/users/', methods=["GET", "POST"])
 def getUser():
     email = request.args.get('email')
     password = request.args.get('password')
     first_name = request.args.get('first_name')
     last_name = request.args.get('last_name')
     phone = request.args.get('phone')
+    type = request.args.get('type')
     if request.method == "GET":
-        return UsersHandler().getUser(email, password)
+        return UsersHandler().getUser(email, password, type)
     elif request.method == "POST":
-        return UsersHandler().addUser(email, password, first_name, last_name, phone)
+        return UsersHandler().addUser(email, password, first_name, last_name, phone, type)
     else:
         return jsonify("Not Supported"), 405
 
 # ============= Properties ======================
 
 
-@app.route('/greenlease/properties', methods=["GET"])
+@app.route('/api/properties', methods=["GET"])
 def getAllProperties():
     return PropertiesHandler().getAllProperties()
 
 
-@app.route('/greenlease/properties/', methods=["GET", "POST"])
+@app.route('/api/properties/', methods=["GET", "POST"])
 def getProperty():
     landlord_id = request.args.get('landlord_id')
     address = request.args.get('address')

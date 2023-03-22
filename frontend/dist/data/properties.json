@@ -1,0 +1,11 @@
+[
+	{
+		"property_id": 0,
+		"landlord_id": 0,
+		"name": "Breaking Bad House",
+		"address": "308 Negra Arroyo Lane, Albuquerque, New Mexico, 87104",
+		"bedrooms": 3,
+		"bathrooms": 1,
+		"picture": "https://static.wikia.nocookie.net/breakingbad/images/6/6c/White_Residence.png"
+	}
+]
