@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/esm/Button";
@@ -22,9 +22,9 @@ export default function Landing() {
 	const [user, setUser] = useLocalStorage("user", null);
 
 	// Login details
-	const [email, setEmail] = useState(user.email);
-	const [password, setPassword] = useState(user.password);
-	const [type, setType] = useState(user.type);
+	const [email, setEmail] = useState("");
+	const [password, setPassword] = useState("");
+	const [type, setType] = useState("");
 
 	// Register details
 	const [name, setName] = useState("");
@@ -42,18 +42,18 @@ export default function Landing() {
 		}
 
 		// Check if user exists
-		await setUser(
-			await getUser({
-				email: email,
-				password: password,
-				type: type,
-			})
-		);
+		const checkUser = await getUser({
+			email: email,
+			password: password,
+			type: type,
+		});
 
-		if (user === null) {
+		if (checkUser === null) {
 			setUserErrorShow(true);
 			return;
 		}
+
+		setUser(checkUser);
 
 		navigate("/listings");
 	};
@@ -72,23 +72,32 @@ export default function Landing() {
 		}
 
 		// Create user
-		await setUser(
-			await addUser({
-				email: newEmail,
-				password: newPassword,
-				name: name,
-				phone: phone,
-				type: newType,
-			})
-		);
+		const createUser = await addUser({
+			email: newEmail,
+			password: newPassword,
+			name: name,
+			phone: phone,
+			type: newType,
+		});
 
-		if (user === null) {
+		if (createUser === null) {
 			setUserErrorShow(true);
 			return;
 		}
 
+		setUser(createUser);
+
 		navigate("/listings");
 	};
+
+	useEffect(() => {
+		if (!user) {
+			return;
+		}
+		setEmail(user.email);
+		setPassword(user.password);
+		setType(user.type);
+	}, []);
 
 	return (
 		<div className="landing-page">

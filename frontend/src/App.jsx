@@ -1,8 +1,9 @@
 import { lazy } from "react";
+import Spinner from "react-bootstrap/esm/Spinner";
 import { Route, Routes } from "react-router-dom";
 import PageLayout from "./layout/PageLayout";
+import Landing from "./pages/Landing";
 
-const Landing = lazy(() => import("./pages/Landing"));
 const Listings = lazy(() => import("./pages/Listings"));
 const Home = lazy(() => import("./pages/Home"));
 const Rent = lazy(() => import("./pages/Rent"));
