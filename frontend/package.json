@@ -2,11 +2,11 @@
 	"name": "frontend",
 	"private": true,
 	"version": "0.0.0",
-	"homepage": "https://capstone-greenlease.github.io/Greenlease/",
 	"type": "module",
 	"scripts": {
 		"predeploy": "npm run build",
-		"deploy": "gh-pages -d dist",
+		"deploy": "git commit -a -m 'Deployment'",
+		"postdeploy": "git push origin main",
 		"dev": "vite",
 		"build": "vite build",
 		"preview": "vite preview"
@@ -18,7 +18,6 @@
 		"@react-google-maps/api": "^2.18.1",
 		"apexcharts": "^3.37.0",
 		"bootstrap": "^5.2.3",
-		"gh-pages": "^5.0.0",
 		"react": "^18.2.0",
 		"react-apexcharts": "^1.4.0",
 		"react-bootstrap": "^2.7.2",
