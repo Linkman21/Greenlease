@@ -8,7 +8,7 @@ import useLocalStorage from "../hooks/useLocalStorage";
 export default function Navigation() {
 	const navigate = useNavigate();
 
-	const [name, setName] = useLocalStorage("name", "");
+	const [user, setUser] = useLocalStorage("user", null);
 
 	return (
 		<Navbar expand="sm" collapseOnSelect>
@@ -43,7 +43,7 @@ export default function Navigation() {
 					</Nav>
 					<Nav>
 						<Navbar.Text>
-							Hi {name}! <a href="/">Sign out</a>
+							Hi {user.first_name}! <a href="/">Sign out</a>
 						</Navbar.Text>
 					</Nav>
 				</Navbar.Collapse>

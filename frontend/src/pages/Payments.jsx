@@ -8,11 +8,11 @@ import Rating from "../components/Rating";
 import useLocalStorage from "../hooks/useLocalStorage";
 
 export default function Payments() {
-	const [type, setType] = useLocalStorage("type", "");
+	const [user, setUser] = useLocalStorage("user", null);
 
 	return (
 		<div className="payments-page">
-			{type === "landlord" ? <LandlordPayments /> : <TenantPayments />}
+			{user.type === "landlord" ? <LandlordPayments /> : <TenantPayments />}
 		</div>
 	);
 }

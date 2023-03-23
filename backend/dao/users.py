@@ -12,21 +12,10 @@ class UsersDAO:
         self.conn = psycopg2.connect(connection_url)
 
     # SELECT
-    def getAllUsers(self):
-        query = "select * from users;"
-        cursor = self.conn.cursor()
-        cursor.execute(query)
-        result = []
-        for row in cursor:
-            print(row)
-            result.append(row)
-        cursor.close()
-        return result
-
     def getUser(self, email, password, type):
-        query = "select user_id, email, password, first_name, last_name, phone from users natural join tenants where email = %s and password = %s;"
+        query = "select user_id, email, password, first_name, last_name, phone, tenant_id from users natural join tenants where email = %s and password = %s;"
         if type == 'landlord':
-            query = "select user_id, email, password, first_name, last_name, phone from users natural join landlords where email = %s and password = %s;"
+            query = "select user_id, email, password, first_name, last_name, phone, landlord_id from users natural join landlords where email = %s and password = %s;"
         cursor = self.conn.cursor()
         cursor.execute(query, (email, password,))
         return cursor.fetchone()
@@ -45,4 +34,5 @@ class UsersDAO:
 
         self.conn.commit()
         cursor.close()
-        return user_id
+
+        return self.getUser(email, password, type)

@@ -39,7 +39,7 @@ export function ListingCards({ listings }) {
 				return (
 					<Col key={index}>
 						<Card onClick={() => setOpenView(true)}>
-							<Card.Img variant="top" src={value.picture} />
+							<Card.Img variant="top" src={value.pictures[0]} />
 							<Card.Body>
 								<Card.Title>{value.name}</Card.Title>
 								<Card.Text>${value.price}/month</Card.Text>
@@ -91,8 +91,8 @@ export function PropertyCards({ properties }) {
 				const [openView, setOpenView] = useState(false);
 				return (
 					<Col key={index}>
-						<Card onClick={() => setOpenView(true)}>
-							<Card.Img variant="top" src={value.picture} />
+						<Card className="property-card" onClick={() => setOpenView(true)}>
+							<Card.Img variant="top" src={value.pictures[0]} />
 							<Card.Body>
 								<Card.Title>{value.name}</Card.Title>
 								<div className="address-label">

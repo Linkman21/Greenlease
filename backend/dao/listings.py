@@ -2,7 +2,7 @@ from config.credentials import pg_config
 import psycopg2
 
 
-class PropertiesDAO:
+class ListingsDAO:
     def __init__(self):
         connection_url = "dbname=%s user=%s password=%s port=%s host=%s" % (pg_config['dbname'],
                                                                             pg_config['user'],
@@ -12,8 +12,8 @@ class PropertiesDAO:
         self.conn = psycopg2.connect(connection_url)
 
     # SELECT
-    def getAllProperties(self):
-        query = "select property_id, landlord_id, name, address, bedrooms, bathrooms, pictures from properties;"
+    def getAllListings(self):
+        query = "select listing_id, landlord_id, property_id, name, address, bedrooms, bathrooms, pictures, title, description, pet_flag, date_listed, price from listings natural join properties;"
         cursor = self.conn.cursor()
         cursor.execute(query)
         result = []
@@ -23,8 +23,8 @@ class PropertiesDAO:
         cursor.close()
         return result
 
-    def getProperties(self, landlord_id):
-        query = "select property_id, landlord_id, name, address, bedrooms, bathrooms, pictures from properties where landlord_id = %s;"
+    def getListings(self, landlord_id):
+        query = "select listing_id, landlord_id, property_id, name, address, bedrooms, bathrooms, pictures, title, description, pet_flag, date_listed, price from listings natural join properties where landlord_id=%s;"
         cursor = self.conn.cursor()
         cursor.execute(query, (landlord_id,))
         result = []
@@ -35,12 +35,11 @@ class PropertiesDAO:
         return result
 
     # INSERT
-    def addProperty(self, landlord_id, name, address, bedrooms, bathrooms, pictures):
-        query = "insert into properties(landlord_id, name, address, bedrooms, bathrooms, pictures) values(%s, %s, %s, %s, %s, %s) returning property_id;"
+    def addListing(self, landlord_id, property_id, title, description, pet_flag, price):
+        query = "insert into listings(landlord_id, property_id, title, description, pet_flag, price) values(%s, %s, %s, %s, %s, %s) returning listing_id, date_listed;"
         cursor = self.conn.cursor()
-        cursor.execute(query, (landlord_id, name, address,
-                       bedrooms, bathrooms, pictures))
-        property_id = cursor.fetchone()[0]
+        cursor.execute(query, (landlord_id, property_id, title,
+                       description, pet_flag, price,))
         self.conn.commit()
         cursor.close()
-        return property_id
+        return self.getListings(landlord_id)

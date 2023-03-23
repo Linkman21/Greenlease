@@ -5,7 +5,7 @@ import Button from "react-bootstrap/esm/Button";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import { useNavigate } from "react-router-dom";
-import { getUser } from "../api/fetcher";
+import { addUser, getUser } from "../api/fetcher";
 import logo from "../assets/logo_dark.svg";
 import { EmptyFields, UserNotFound } from "../components/Modal";
 import useLocalStorage from "../hooks/useLocalStorage";
@@ -19,27 +19,36 @@ export default function Landing() {
 	const [userErrorShow, setUserErrorShow] = useState(false);
 
 	// User details in local storage
-	const [userID, setUserID] = useLocalStorage("user_id", "");
-	const [email, setEmail] = useLocalStorage("email", "");
-	const [password, setPassword] = useLocalStorage("password", "");
-	const [name, setName] = useLocalStorage("name", "");
-	const [phone, setPhone] = useLocalStorage("phone", "");
-	const [type, setType] = useLocalStorage("type", "");
+	const [user, setUser] = useLocalStorage("user", null);
+
+	// Login details
+	const [email, setEmail] = useState(user.email);
+	const [password, setPassword] = useState(user.password);
+	const [type, setType] = useState(user.type);
+
+	// Register details
+	const [name, setName] = useState("");
+	const [phone, setPhone] = useState("");
+	const [newEmail, setNewEmail] = useState("");
+	const [newPassword, setNewPassword] = useState("");
+	const [newType, setNewType] = useState("");
 
 	// Handle user login procedure
 	const handleLogin = async () => {
 		// Check for empty fields
-		if (email === "" || password == "" || type == "") {
+		if (email === "" || password === "" || type === "") {
 			setFieldErrorShow(true);
 			return;
 		}
 
 		// Check if user exists
-		const user = await getUser({
-			email: email,
-			password: password,
-			type: type,
-		});
+		await setUser(
+			await getUser({
+				email: email,
+				password: password,
+				type: type,
+			})
+		);
 
 		if (user === null) {
 			setUserErrorShow(true);
@@ -52,9 +61,9 @@ export default function Landing() {
 	// Handle user registration procedure
 	const handleRegister = async () => {
 		if (
-			email === "" ||
-			password == "" ||
-			type == "" ||
+			newEmail === "" ||
+			newPassword == "" ||
+			newType == "" ||
 			name == "" ||
 			phone == ""
 		) {
@@ -63,26 +72,22 @@ export default function Landing() {
 		}
 
 		// Create user
-		const user = await addUser({
-			email: email,
-			password: password,
-			name: name,
-			phone: phone,
-			type: type,
-		});
+		await setUser(
+			await addUser({
+				email: newEmail,
+				password: newPassword,
+				name: name,
+				phone: phone,
+				type: newType,
+			})
+		);
+
+		if (user === null) {
+			setUserErrorShow(true);
+			return;
+		}
 
 		navigate("/listings");
-	};
-
-	// Save user details
-	const saveUser = (user) => {
-		setUserID(user.user_id);
-		setEmail(user.email);
-		setPassword(user.password);
-		setFirstName(user.first_name);
-		setLastName(user.last_name);
-		setPhone(user.phone);
-		setType(user.type);
 	};
 
 	return (
@@ -180,8 +185,8 @@ export default function Landing() {
 										<Form.Label>Email</Form.Label>
 										<Form.Control
 											type="email"
-											value={email}
-											onChange={(e) => setEmail(e.target.value)}
+											value={newEmail}
+											onChange={(e) => setNewEmail(e.target.value)}
 										/>
 									</Form.Group>
 								</Col>
@@ -190,8 +195,8 @@ export default function Landing() {
 										<Form.Label>Password</Form.Label>
 										<Form.Control
 											type="password"
-											value={password}
-											onChange={(e) => setPassword(e.target.value)}
+											value={newPassword}
+											onChange={(e) => setNewPassword(e.target.value)}
 										/>
 									</Form.Group>
 								</Col>
@@ -204,7 +209,7 @@ export default function Landing() {
 											type="radio"
 											label="Tenant"
 											name="type"
-											onClick={() => setType("tenant")}
+											onClick={() => setNewType("tenant")}
 										/>
 									</Col>
 									<Col>
@@ -212,7 +217,7 @@ export default function Landing() {
 											type="radio"
 											label="Landlord"
 											name="type"
-											onClick={() => setType("landlord")}
+											onClick={() => setNewType("landlord")}
 										/>
 									</Col>
 								</Row>

@@ -1,10 +1,12 @@
+import { lazy } from "react";
 import { Route, Routes } from "react-router-dom";
 import PageLayout from "./layout/PageLayout";
-import Home from "./pages/Home";
-import Landing from "./pages/Landing";
-import Listings from "./pages/Listings";
-import Payments from "./pages/Payments";
-import Rent from "./pages/Rent";
+
+const Landing = lazy(() => import("./pages/Landing"));
+const Listings = lazy(() => import("./pages/Listings"));
+const Home = lazy(() => import("./pages/Home"));
+const Rent = lazy(() => import("./pages/Rent"));
+const Payments = lazy(() => import("./pages/Payments"));
 
 export default function App() {
 	return (

@@ -261,7 +261,7 @@ body {
 }
 
 .card img {
-	width: 18rem;
+	height: 13rem;
 	border-radius: 1rem 1rem 0 0;
 	margin: auto;
 }
@@ -290,6 +290,19 @@ body {
 .icon {
 	font-size: 0.9rem !important;
 	margin: 0 0.1rem 0 0 !important;
+}
+
+/* ========================= Property Cards Styles ========================= */
+
+.property-card {
+	width: 18rem;
+	height: 22rem;
+}
+
+.property-card img {
+	height: 13rem;
+	border-radius: 1rem 1rem 0 0;
+	margin: auto;
 }
 
 /* ========================= Add Card Styles ========================= */

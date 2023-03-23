@@ -5,11 +5,11 @@ import Rating from "../components/Rating";
 import useLocalStorage from "../hooks/useLocalStorage";
 
 export default function Home() {
-	const [type, setType] = useLocalStorage("type", "");
+	const [user, setUser] = useLocalStorage("user", null);
 
 	return (
 		<div className="home-page">
-			{type === "landlord" ? <LandlordHome /> : <TenantHome />}
+			{user.type === "landlord" ? <LandlordHome /> : <TenantHome />}
 		</div>
 	);
 }

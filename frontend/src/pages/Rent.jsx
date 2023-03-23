@@ -8,26 +8,28 @@ import Rating from "../components/Rating";
 import useLocalStorage from "../hooks/useLocalStorage";
 
 export default function Rent() {
-	const [type, setType] = useLocalStorage("type", "");
+	const [user, setUser] = useLocalStorage("user", null);
 
 	return (
 		<div className="rent-page">
-			{type === "landlord" ? <LandlordRent /> : <TenantRent />}
+			{user.type === "landlord" ? <LandlordRent /> : <TenantRent />}
 		</div>
 	);
 }
 
 function LandlordRent() {
+	const [user, setUser] = useLocalStorage("user", null);
+
 	// Landlord listings
 	const [listings, setListings] = useState(null);
 	const fetchListings = async () => {
-		setListings(await getListings(0));
+		setListings(await getListings(user.landlord_id));
 	};
 
 	// Landlord properties
 	const [properties, setProperties] = useState(null);
 	const fetchProperties = async () => {
-		setProperties(await getProperties(0));
+		setProperties(await getProperties(user.landlord_id));
 	};
 
 	// On component mount
