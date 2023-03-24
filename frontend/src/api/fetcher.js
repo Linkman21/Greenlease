@@ -35,6 +35,10 @@ export async function addUser({ email, password, name, phone, type }) {
 		}
 	}
 
+	if (last_name === "") {
+		last_name = "No Lastname";
+	}
+
 	const api =
 		url +
 		"/api/users/?email=" +
