@@ -17,6 +17,13 @@ CORS(app)
 def index():
     return send_from_directory(app.static_folder, "index.html")
 
+# Handle missing pages
+
+
+@app.errorhandler(404)
+def notFound(e):
+    return send_from_directory(app.static_folder, "index.html")
+
 
 # ============= Users ======================
 @app.route('/api/users/', methods=["GET", "POST"])

@@ -142,6 +142,7 @@ body {
 
 .navbar-brand {
 	font-size: 1.4rem;
+	cursor: pointer;
 }
 
 /* ========================= Content Layout Styles ========================= */
