@@ -7,7 +7,7 @@ import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
 import Spinner from "react-bootstrap/Spinner";
 import Col from "react-bootstrap/esm/Col";
-import { ListingView, PropertyView } from "./Modal";
+import { AddPropertyView, ListingView, PropertyView } from "./Modal";
 
 export function AddCard() {
 	const [openView, setOpenView] = useState(false);
@@ -23,6 +23,7 @@ export function AddCard() {
 					</Card.Body>
 				</Card>
 			</Col>
+			<AddPropertyView open={openView} setOpen={setOpenView} />
 		</>
 	);
 }

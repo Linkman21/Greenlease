@@ -19,9 +19,9 @@ export default function Listings() {
 	};
 
 	// Search
-	const [search, setSearch] = useState(null);
+	const [search, setSearch] = useState("");
 	const handleSearch = () => {
-		if (!search) return;
+		if (search === "") return;
 		fetchFilteredListings();
 		console.log("Searching: ", search);
 	};
@@ -67,7 +67,7 @@ export default function Listings() {
 
 	// Clear filters
 	const handleClear = () => {
-		// if (!bathrooms && !pets && !bedrooms && search == "") return;
+		if (!bathrooms && !pets && !bedrooms && search === "") return;
 		setListings(null);
 		setSearch("");
 		setBathrooms(null);
@@ -98,9 +98,6 @@ export default function Listings() {
 			</Row>
 			<Row>
 				<div className="filters">
-					<Button className="clear" onClick={handleClear}>
-						Clear
-					</Button>
 					<Button className={petsButton} onClick={() => setPets(true)}>
 						Pet Friendly
 					</Button>
@@ -132,6 +129,9 @@ export default function Listings() {
 							3
 						</Dropdown.Item>
 					</DropdownButton>
+					<Button className="clear" onClick={handleClear}>
+						Clear
+					</Button>
 				</div>
 			</Row>
 			<Row xs="auto">

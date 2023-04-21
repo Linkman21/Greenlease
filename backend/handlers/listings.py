@@ -48,7 +48,7 @@ class ListingsHandler:
         dao = ListingsDAO()
 
         if not search and not bedrooms and not bathrooms and not pets:
-            return jsonify("Missing Arguments"), 404
+            return self.getAllListings()
 
         listings_list = dao.getFilteredListings(
             search, bedrooms, bathrooms, pets)
