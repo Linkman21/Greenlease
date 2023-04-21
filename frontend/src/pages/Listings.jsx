@@ -14,13 +14,16 @@ export default function Listings() {
 		setListings(await getAllListings());
 	};
 	const fetchFilteredListings = async () => {
-		setListings(await getFilteredListings(bedrooms, bathrooms, pets));
+		setListings(null);
+		setListings(await getFilteredListings(search, bedrooms, bathrooms, pets));
 	};
 
 	// Search
 	const [search, setSearch] = useState(null);
 	const handleSearch = () => {
-		console.log(search);
+		if (!search) return;
+		fetchFilteredListings();
+		console.log("Searching: ", search);
 	};
 
 	// Bedrooms
@@ -32,6 +35,7 @@ export default function Listings() {
 			return;
 		}
 		setBedsButton("on");
+		fetchFilteredListings();
 		console.log("Bedrooms: ", bedrooms);
 	}, [bedrooms]);
 
@@ -44,6 +48,7 @@ export default function Listings() {
 			return;
 		}
 		setBathsButton("on");
+		fetchFilteredListings();
 		console.log("Bathrooms: ", bathrooms);
 	}, [bathrooms]);
 
@@ -56,13 +61,15 @@ export default function Listings() {
 			return;
 		}
 		setPetsButton("on");
+		fetchFilteredListings();
 		console.log("Pets: ", pets);
 	}, [pets]);
 
 	// Clear filters
 	const handleClear = () => {
-		if (!bathrooms && !pets && !bedrooms) return;
+		// if (!bathrooms && !pets && !bedrooms && search == "") return;
 		setListings(null);
+		setSearch("");
 		setBathrooms(null);
 		setBedrooms(null);
 		setPets(null);
@@ -75,15 +82,6 @@ export default function Listings() {
 		fetchListings();
 	}, []);
 
-	// Fetch filtered listings
-	useEffect(() => {
-		if (!pets && !bathrooms && !bedrooms) {
-			return;
-		}
-		setListings(null);
-		fetchFilteredListings();
-	}, [bathrooms, bedrooms, pets]);
-
 	return (
 		<>
 			<Row>
@@ -92,6 +90,7 @@ export default function Listings() {
 						type="search"
 						placeholder="Search"
 						aria-label="Search"
+						value={search}
 						onChange={(e) => setSearch(e.target.value)}
 					/>
 					<Button onClick={handleSearch}>Search</Button>

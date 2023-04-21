@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
-import Button from "react-bootstrap/esm/Button";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
+import Button from "react-bootstrap/esm/Button";
 import { useNavigate } from "react-router-dom";
 import { addUser, getUser } from "../api/fetcher";
 import logo from "../assets/logo_dark.svg";
@@ -140,7 +140,8 @@ export default function Landing() {
 											type="radio"
 											label="Tenant"
 											name={type}
-											onClick={() => setType("tenant")}
+											onChange={() => setType("tenant")}
+											checked={type === "tenant" ? true : false}
 										/>
 									</Col>
 									<Col>
@@ -148,7 +149,8 @@ export default function Landing() {
 											type="radio"
 											label="Landlord"
 											name={type}
-											onClick={() => setType("landlord")}
+											onChange={() => setType("landlord")}
+											checked={type === "landlord" ? true : false}
 										/>
 									</Col>
 								</Row>

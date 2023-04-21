@@ -44,13 +44,14 @@ class ListingsHandler:
             result.append(dict)
         return jsonify(result)
 
-    def getFilteredListings(self, bedrooms, bathrooms, pets):
+    def getFilteredListings(self, search, bedrooms, bathrooms, pets):
         dao = ListingsDAO()
 
-        if not bedrooms and not bathrooms and not pets:
+        if not search and not bedrooms and not bathrooms and not pets:
             return jsonify("Missing Arguments"), 404
 
-        listings_list = dao.getFilteredListings(bedrooms, bathrooms, pets)
+        listings_list = dao.getFilteredListings(
+            search, bedrooms, bathrooms, pets)
         result = []
         for row in listings_list:
             dict = self.build_listings_dict(row)

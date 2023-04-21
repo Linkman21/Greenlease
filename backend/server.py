@@ -93,11 +93,12 @@ def listings_endpoint():
 
 @app.route('/api/listings/filters/', methods=["GET"])
 def listings_filters_endpoint():
+    search = request.args.get('search')
     bedrooms = request.args.get('bedrooms')
     bathrooms = request.args.get('bathrooms')
     pets = request.args.get('pets')
     if request.method == "GET":
-        return ListingsHandler().getFilteredListings(bedrooms, bathrooms, pets)
+        return ListingsHandler().getFilteredListings(search, bedrooms, bathrooms, pets)
     else:
         return jsonify("Not Supported"), 405
 

@@ -34,43 +34,30 @@ class ListingsDAO:
         cursor.close()
         return result
 
-    def getFilteredListings(self, bedrooms, bathrooms, pets):
-        query = "select listing_id, landlord_id, property_id, name, address, bedrooms, bathrooms, pictures, title, description, pet_flag, date_listed, price from listings natural join properties where "
+    def getFilteredListings(self, search, bedrooms, bathrooms, pets):
+        query = "select listing_id, landlord_id, property_id, name, address, bedrooms, bathrooms, pictures, title, description, pet_flag, date_listed, price from listings natural join properties where (title ilike %s or description ilike %s or name ilike %s or address ilike %s) "
 
-        if bedrooms and bathrooms and pets:
-            query += "bedrooms=%s and bathrooms=%s and pet_flag=%s;"
-            cursor = self.conn.cursor()
-            cursor.execute(query, (bedrooms, bathrooms, pets,))
+        string = "%"
 
-        if bedrooms and bathrooms and not pets:
-            query += "bedrooms=%s and bathrooms=%s;"
-            cursor = self.conn.cursor()
-            cursor.execute(query, (bedrooms, bathrooms,))
+        if search:
+            string += search + "%"
 
-        if bedrooms and not bathrooms and not pets:
-            query += "bedrooms=%s;"
-            cursor = self.conn.cursor()
-            cursor.execute(query, (bedrooms,))
+        args = (string, string, string, string)
 
-        if not bedrooms and not bathrooms and pets:
-            query += "pet_flag=%s;"
-            cursor = self.conn.cursor()
-            cursor.execute(query, (pets,))
+        if bedrooms:
+            query += "and bedrooms=%s"
+            args += (bedrooms,)
+        if bathrooms:
+            query += "and bathrooms=%s"
+            args += (bathrooms,)
+        if pets:
+            query += "and pet_flag=%s"
+            args += (pets,)
 
-        if not bedrooms and bathrooms and pets:
-            query += "bathrooms=%s and pet_flag=%s;"
-            cursor = self.conn.cursor()
-            cursor.execute(query, (bathrooms, pets,))
+        query += ";"
 
-        if bedrooms and not bathrooms and pets:
-            query += "bedrooms=%s and pet_flag=%s;"
-            cursor = self.conn.cursor()
-            cursor.execute(query, (bedrooms, pets,))
-
-        if not bedrooms and bathrooms and not pets:
-            query += "bathrooms=%s;"
-            cursor = self.conn.cursor()
-            cursor.execute(query, (bathrooms,))
+        cursor = self.conn.cursor()
+        cursor.execute(query, args,)
 
         result = []
         for row in cursor:

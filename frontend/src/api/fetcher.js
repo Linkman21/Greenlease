@@ -101,16 +101,19 @@ export async function getListings(landlord_id) {
 	return data;
 }
 
-export async function getFilteredListings(beds, baths, pets) {
+export async function getFilteredListings(search, beds, baths, pets) {
 	console.log("Filtering listings...");
 
+	if (!search) search = "";
 	if (!beds) beds = "";
 	if (!baths) baths = "";
 	if (!pets) pets = "";
 
 	const api =
 		url +
-		"/api/listings/filters/?bedrooms=" +
+		"/api/listings/filters/?search=" +
+		search +
+		"&bedrooms=" +
 		beds +
 		"&bathrooms=" +
 		baths +
