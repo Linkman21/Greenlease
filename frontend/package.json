@@ -8,7 +8,7 @@
 		"build": "vite build",
 		"preview": "vite preview",
 		"prestart": "npm run build",
-		"start": "python ../backend/app.py"
+		"start": "python ../backend/server.py"
 	},
 	"dependencies": {
 		"@emotion/styled": "^11.10.6",
