@@ -2,10 +2,10 @@ import BathtubOutlinedIcon from "@mui/icons-material/BathtubOutlined";
 import BedOutlinedIcon from "@mui/icons-material/BedOutlined";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import PetsOutlinedIcon from "@mui/icons-material/PetsOutlined";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Card from "react-bootstrap/Card";
-import Col from "react-bootstrap/esm/Col";
 import Spinner from "react-bootstrap/Spinner";
+import Col from "react-bootstrap/esm/Col";
 import { ListingView, PropertyView } from "./Modal";
 
 export function AddCard() {
@@ -27,38 +27,49 @@ export function AddCard() {
 }
 
 export function ListingCards({ listings }) {
+	const [currentListing, setCurrentListing] = useState(null);
+	const [openView, setOpenView] = useState(false);
+
 	// Check if there are listings
 	if (listings === null) {
 		return <Spinner />;
 	}
 
+	if (listings.length === 0) {
+		return "No matches found.";
+	}
+
 	return (
 		<>
-			{listings.map((value, index) => {
-				const [openView, setOpenView] = useState(false);
+			{listings.map((listing, index) => {
 				return (
 					<Col key={index}>
-						<Card onClick={() => setOpenView(true)}>
-							<Card.Img variant="top" src={value.pictures[0]} />
+						<Card
+							onClick={() => {
+								setCurrentListing(listing);
+								setOpenView(true);
+							}}
+						>
+							<Card.Img variant="top" src={listing.pictures[0]} />
 							<Card.Body>
-								<Card.Title>{value.name}</Card.Title>
-								<Card.Text>${value.price}/month</Card.Text>
+								<Card.Title>{listing.name}</Card.Title>
+								<Card.Text>${listing.price}/month</Card.Text>
 								<div className="address-label">
 									<LocationOnOutlinedIcon
 										style={{ color: "#209fa8", margin: "0 0.5rem 0 0.1rem" }}
 									/>
-									{value.address}
+									{listing.address}
 								</div>
 
 								<div className="tags">
 									<div className="tag">
-										<BedOutlinedIcon className="icon" /> {value.bedrooms} bed
+										<BedOutlinedIcon className="icon" /> {listing.bedrooms} bed
 									</div>
 									<div className="tag">
 										<BathtubOutlinedIcon className="icon" />
-										{value.bathrooms} bath
+										{listing.bathrooms} bath
 									</div>
-									{!value.pet_flag ? null : (
+									{!listing.pet_flag ? null : (
 										<div className="tag">
 											<PetsOutlinedIcon className="icon" />
 											Pet Friendly
@@ -67,14 +78,14 @@ export function ListingCards({ listings }) {
 								</div>
 							</Card.Body>
 						</Card>
-						<ListingView
-							open={openView}
-							setOpen={setOpenView}
-							listing={value}
-						/>
 					</Col>
 				);
 			})}
+			<ListingView
+				open={openView}
+				setOpen={setOpenView}
+				listing={currentListing}
+			/>
 		</>
 	);
 }

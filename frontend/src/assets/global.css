@@ -190,22 +190,45 @@ body {
 	justify-content: center;
 }
 
-.filter-btn,
-.filter-dropdown > .btn {
-	color: var(--white);
-	background: var(--grey);
+.filters .btn {
 	margin: 0.7rem 0.2rem 2rem 0;
 	border-radius: 0.3rem;
 	font-size: 0.8rem;
 	border: none;
 	padding: 0.3rem 0.6rem;
+	height: 2rem;
 }
 
-.filter-btn:hover,
-.filter-btn:active,
-.filter-dropdown > .btn:hover,
-.filter-dropdown > .btn:active {
-	background: var(--blue) !important;
+.filters .clear.btn {
+	color: var(--orange);
+	background: var(--white);
+	border: 0.1rem solid var(--orange);
+}
+
+.filters .off.btn,
+.filters .off.dropdown .btn {
+	color: var(--white);
+	background: var(--grey);
+}
+
+.filters .on.btn,
+.filters .on.dropdown .btn {
+	color: var(--white);
+	background: var(--blue);
+}
+
+.filters .btn:hover,
+.filters .btn:active,
+.filters .dropdown .btn:hover,
+.filters .dropdown .btn:focus,
+.filters .dropdown a:active {
+	background: var(--blue);
+}
+
+.filters .clear.btn:hover,
+.filters .clear.btn:active {
+	color: var(--white);
+	background-color: var(--orange);
 }
 
 /* ========================= Home Page Styles ========================= */
@@ -320,8 +343,7 @@ body {
 
 .spinner-border {
 	position: absolute;
-	left: 50%;
-	top: 40%;
+	margin: 10rem 50vw auto 50vw;
 	color: var(--black);
 }
 
@@ -332,5 +354,9 @@ body {
 		height: 1px;
 		width: 100%;
 		margin: 3rem auto 3rem auto;
+	}
+
+	.row.row-cols-auto {
+		justify-content: center;
 	}
 }

@@ -21,7 +21,7 @@ class ListingsHandler:
         result['price'] = row[12]
         return result
 
-    # GET
+    # =================== GET ===================
     def getAllListings(self):
         dao = ListingsDAO()
         listings_list = dao.getAllListings()
@@ -44,8 +44,20 @@ class ListingsHandler:
             result.append(dict)
         return jsonify(result)
 
-    # POST
+    def getFilteredListings(self, bedrooms, bathrooms, pets):
+        dao = ListingsDAO()
 
+        if not bedrooms and not bathrooms and not pets:
+            return jsonify("Missing Arguments"), 404
+
+        listings_list = dao.getFilteredListings(bedrooms, bathrooms, pets)
+        result = []
+        for row in listings_list:
+            dict = self.build_listings_dict(row)
+            result.append(dict)
+        return jsonify(result)
+
+    # =================== POST ===================
     def addListing(self, landlord_id, property_id, title, description, pet_flag, price):
         if landlord_id and property_id and title and description and pet_flag and price:
             dao = ListingsDAO()

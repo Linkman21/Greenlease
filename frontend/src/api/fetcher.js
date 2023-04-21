@@ -1,6 +1,5 @@
-// const url = "";
-// const url = "http://127.0.0.1:5000";
-const url = "https://greenlease.herokuapp.com";
+var url = "";
+// url = "http://127.0.0.1:5000";
 
 // Users
 export async function getUser({ email, password, type }) {
@@ -92,6 +91,32 @@ export async function getAllListings() {
 
 export async function getListings(landlord_id) {
 	const api = url + "/api/listings/?landlord_id=" + landlord_id;
+	const response = await fetch(api);
+	const data = await response.json();
+
+	if (data === "Not Found") {
+		return null;
+	}
+
+	return data;
+}
+
+export async function getFilteredListings(beds, baths, pets) {
+	console.log("Filtering listings...");
+
+	if (!beds) beds = "";
+	if (!baths) baths = "";
+	if (!pets) pets = "";
+
+	const api =
+		url +
+		"/api/listings/filters/?bedrooms=" +
+		beds +
+		"&bathrooms=" +
+		baths +
+		"&pets=" +
+		pets;
+
 	const response = await fetch(api);
 	const data = await response.json();
 

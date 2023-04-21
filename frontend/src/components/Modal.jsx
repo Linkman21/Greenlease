@@ -1,5 +1,5 @@
-import Button from "react-bootstrap/esm/Button";
 import Modal from "react-bootstrap/Modal";
+import Button from "react-bootstrap/esm/Button";
 import Map from "./Map";
 
 export function EmptyFields({ open, setOpen }) {
@@ -54,6 +54,7 @@ export function UserNotFound({ open, setOpen }) {
 }
 
 export function ListingView({ open, setOpen, listing }) {
+	if (!listing) return;
 	return (
 		<Modal show={open} onHide={() => setOpen(false)} size="lg" centered>
 			<Modal.Header>

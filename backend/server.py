@@ -17,39 +17,41 @@ CORS(app)
 def index():
     return send_from_directory(app.static_folder, "index.html")
 
+
 # Handle missing pages
-
-
 @app.errorhandler(404)
-def notFound(e):
+def not_found(e):
     return send_from_directory(app.static_folder, "index.html")
 
 
 # ============= Users ======================
 @app.route('/api/users/', methods=["GET", "POST"])
-def getUser():
+def users_endpoint():
     email = request.args.get('email')
     password = request.args.get('password')
     first_name = request.args.get('first_name')
     last_name = request.args.get('last_name')
     phone = request.args.get('phone')
-    type = request.args.get('type')
+    user_type = request.args.get('type')
     if request.method == "GET":
-        return UsersHandler().getUser(email, password, type)
+        return UsersHandler().getUser(email, password, user_type)
     elif request.method == "POST":
-        return UsersHandler().addUser(email, password, first_name, last_name, phone, type)
+        return UsersHandler().addUser(email, password, first_name, last_name, phone, user_type)
     else:
         return jsonify("Not Supported"), 405
 
 
 # ============= Properties ======================
 @app.route('/api/properties', methods=["GET"])
-def getAllProperties():
-    return PropertiesHandler().getAllProperties()
+def all_properties_endpoint():
+    if request.method == "GET":
+        return PropertiesHandler().getAllProperties()
+    else:
+        return jsonify("Not Supported"), 405
 
 
 @app.route('/api/properties/', methods=["GET", "POST"])
-def getProperties():
+def properties_endpoint():
     landlord_id = request.args.get('landlord_id')
     name = request.args.get('name')
     address = request.args.get('address')
@@ -66,12 +68,15 @@ def getProperties():
 
 # ============= Listings ======================
 @app.route('/api/listings', methods=["GET"])
-def getAllListings():
-    return ListingsHandler().getAllListings()
+def all_listings_endpoint():
+    if request.method == "GET":
+        return ListingsHandler().getAllListings()
+    else:
+        return jsonify("Not Supported"), 405
 
 
 @app.route('/api/listings/', methods=["GET", "POST"])
-def getListings():
+def listings_endpoint():
     landlord_id = request.args.get('landlord_id')
     property_id = request.args.get('property_id')
     title = request.args.get('title')
@@ -82,6 +87,17 @@ def getListings():
         return ListingsHandler().getListings(landlord_id)
     elif request.method == "POST":
         return ListingsHandler().addListing(landlord_id, property_id, title, description, pet_flag, price)
+    else:
+        return jsonify("Not Supported"), 405
+
+
+@app.route('/api/listings/filters/', methods=["GET"])
+def listings_filters_endpoint():
+    bedrooms = request.args.get('bedrooms')
+    bathrooms = request.args.get('bathrooms')
+    pets = request.args.get('pets')
+    if request.method == "GET":
+        return ListingsHandler().getFilteredListings(bedrooms, bathrooms, pets)
     else:
         return jsonify("Not Supported"), 405
 
