@@ -1,12 +1,5 @@
 # Backend
 
-## Flask API Endpoints
-
-      /users
-      /landlords
-      /tenants
-      /properties
-
 ## PostgreSQL Database Credentials
 
       database: da2o7d0grr3a3c
