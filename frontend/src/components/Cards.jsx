@@ -4,6 +4,7 @@ import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import PetsOutlinedIcon from "@mui/icons-material/PetsOutlined";
 import { useEffect, useState } from "react";
 import Card from "react-bootstrap/Card";
+import Container from "react-bootstrap/Container";
 import Spinner from "react-bootstrap/Spinner";
 import Col from "react-bootstrap/esm/Col";
 import { ListingView, PropertyView } from "./Modal";
@@ -36,7 +37,7 @@ export function ListingCards({ listings }) {
 	}
 
 	if (listings.length === 0) {
-		return "No matches found.";
+		return <Container>No matches found.</Container>;
 	}
 
 	return (

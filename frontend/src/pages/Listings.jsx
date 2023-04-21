@@ -102,7 +102,7 @@ export default function Listings() {
 					<Button className="clear" onClick={handleClear}>
 						Clear
 					</Button>
-					<Button className={petsButton} onClick={() => setPets(!pets)}>
+					<Button className={petsButton} onClick={() => setPets(true)}>
 						Pet Friendly
 					</Button>
 					<DropdownButton
