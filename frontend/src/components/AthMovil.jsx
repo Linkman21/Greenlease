@@ -5,12 +5,11 @@ import useScript from "../hooks/useScript";
 export default function AthMovil({ pendingPayments }) {
 	// ATH Movil
 	const handleScripts = () => {
-		useExternalScripts(
-			"https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"
-		);
+		// useExternalScripts(
+		// 	"https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"
+		// );
 		useScript(`
-    
-    ATHM_Checkout = {
+      ATHM_Checkout = {
       env: "sandbox",
       publicToken: "sandboxtoken01875617264",
       timeout: 600,
