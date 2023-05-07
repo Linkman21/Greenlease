@@ -191,7 +191,10 @@ function TenantPayments({ user }) {
 			<Row>
 				Total Pending:
 				<div className="total">${!totalPending ? 0 : totalPending}</div>
-				<AthMovil pendingPayments={pendingPayments} />
+				<AthMovil
+					pendingPayments={pendingPayments}
+					totalPending={totalPending}
+				/>
 			</Row>
 			<Accordion flush alwaysOpen>
 				<Accordion.Item eventKey="0">
