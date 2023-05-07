@@ -44,3 +44,13 @@ class PropertiesDAO:
         self.conn.commit()
         cursor.close()
         return property_id
+    
+    # DELETE
+    def deleteProperty(self, property_id):
+        query = "delete from listings where property_id=%s; delete from property_ratings where property_id=%s; delete from contracts where property_id=%s; delete from properties where property_id=%s returning *;"
+        cursor = self.conn.cursor()
+        cursor.execute(query, (property_id, property_id, property_id, property_id,))
+        result = cursor.fetchall()
+        self.conn.commit()
+        cursor.close()
+        return result

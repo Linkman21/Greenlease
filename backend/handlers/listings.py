@@ -19,6 +19,9 @@ class ListingsHandler:
         result['pet_flag'] = row[10]
         result['date_listed'] = row[11]
         result['price'] = row[12]
+        result['landlord_first_name'] = row[13]
+        result['landlord_last_name'] = row[14]
+        result['landlord_phone'] = row[15]
         return result
 
     # =================== GET ===================
@@ -70,3 +73,12 @@ class ListingsHandler:
                 result.append(dict)
             return jsonify(result)
         return jsonify("Missing Arguments"), 404
+
+    # =================== DELETE ===================
+    def deleteListing(self, listing_id):
+        if not listing_id:
+            return jsonify("Missing Arguments"), 404
+
+        dao = ListingsDAO()
+        result = dao.deleteListing(listing_id)
+        return jsonify(result)

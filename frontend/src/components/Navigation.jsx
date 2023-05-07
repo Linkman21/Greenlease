@@ -13,40 +13,43 @@ export default function Navigation() {
 	return (
 		<Navbar expand="sm" collapseOnSelect>
 			<Container fluid>
-				<Navbar.Brand onClick={() => navigate("/listings")}>
-					<div className=".navbar-brand">
-						<img
-							alt="Logo"
-							src={logo}
-							width="30"
-							height="30"
-							className="d-inline-block align-top"
-						/>
-						Greenlease
-					</div>
+				<Navbar.Brand onClick={() => navigate("/")}>
+					<img alt="Logo" src={logo} />
+					<h1>Greenlease</h1>
 				</Navbar.Brand>
 				<Navbar.Toggle aria-controls="basic-navbar-nav" />
-				<Navbar.Collapse id="basic-navbar-nav">
-					<Nav activeKey={useLocation().pathname} className="me-auto">
-						<Nav.Link eventKey={"/home"} onClick={() => navigate("/home")}>
-							Home
-						</Nav.Link>
-						<Nav.Link eventKey={"/rent"} onClick={() => navigate("/rent")}>
-							Rent
-						</Nav.Link>
-						<Nav.Link
-							eventKey={"/payments"}
-							onClick={() => navigate("/payments")}
-						>
-							Payments
-						</Nav.Link>
-					</Nav>
-					<Nav>
-						<Navbar.Text>
-							Hi {user.first_name}! <a href="/">Sign out</a>
-						</Navbar.Text>
-					</Nav>
-				</Navbar.Collapse>
+				{!user ? (
+					<Navbar.Collapse id="basic-navbar-nav">
+						<Nav activeKey={useLocation().pathname} className="me-auto"></Nav>
+						<Nav>
+							<Navbar.Text>
+								<a href="/authentication">Login</a>
+							</Navbar.Text>
+						</Nav>
+					</Navbar.Collapse>
+				) : (
+					<Navbar.Collapse id="basic-navbar-nav">
+						<Nav activeKey={useLocation().pathname} className="me-auto">
+							<Nav.Link
+								eventKey={"/dashboard"}
+								onClick={() => navigate("/dashboard")}
+							>
+								Dashboard
+							</Nav.Link>
+							<Nav.Link
+								eventKey={"/payments"}
+								onClick={() => navigate("/payments")}
+							>
+								Payments
+							</Nav.Link>
+						</Nav>
+						<Nav>
+							<Navbar.Text>
+								Hi {user.first_name}! <a href="/authentication">Sign out</a>
+							</Navbar.Text>
+						</Nav>
+					</Navbar.Collapse>
+				)}
 			</Container>
 		</Navbar>
 	);

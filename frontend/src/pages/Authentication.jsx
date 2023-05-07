@@ -55,7 +55,7 @@ export default function Landing() {
 
 		setUser(checkUser);
 
-		navigate("/listings");
+		navigate("/");
 	};
 
 	// Handle user registration procedure
@@ -87,7 +87,7 @@ export default function Landing() {
 
 		setUser(createUser);
 
-		navigate("/listings");
+		navigate("/");
 	};
 
 	useEffect(() => {

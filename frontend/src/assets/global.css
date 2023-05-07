@@ -4,11 +4,18 @@
 	--green: #dbe0c2;
 	--black: #40403e;
 	--grey: #707070;
+	--light-grey: #bebebe;
 	--white: #fffffb;
 	--blue: #209fa8;
+	--light-blue: #209fa82b;
 	--orange: #f57c00;
+	--red: #c64040;
+	--yellow: #fcdb87;
 	--nav-shadow: 0 0 0.5rem 0.1rem #acaca5;
 	--card-shadow: 0 0 1rem 0.1rem #e6e6dc;
+	--bs-primary: #dbe0c2;
+	--bs-link-color: #dbe0c2;
+	--bs-link-hover-color: #dbe0c2;
 }
 
 /* ========================= Override browser defaults ========================= */
@@ -24,6 +31,10 @@ body {
 	margin: 0;
 	padding: 0;
 	background: var(--white);
+}
+
+.btn:active {
+	background-color: var(--light-grey) !important;
 }
 
 /* ========================= Landing Page Styles ========================= */
@@ -104,8 +115,63 @@ body {
 }
 
 /* ========================= Modals Styles ========================= */
-.modal-header {
-	background: var(--black);
+.error-modal .modal-header {
+	background: var(--red);
+	color: var(--white);
+}
+
+.property-modal .modal-header {
+	background: var(--green);
+	color: var(--black);
+}
+
+.property-modal .carousel {
+	height: 20rem;
+	background-color: whitesmoke;
+}
+
+.property-modal img {
+	display: block;
+	margin: auto;
+	max-height: 20rem;
+}
+
+.listing-modal .modal-header {
+	background: var(--green);
+	color: var(--black);
+}
+
+.listing-modal .carousel {
+	height: 20rem;
+	background-color: whitesmoke;
+}
+
+.listing-modal img {
+	display: block;
+	margin: auto;
+	height: 20rem;
+}
+
+.listing-modal .map {
+	display: block;
+	margin: auto;
+	width: 35rem;
+	height: 20rem;
+}
+
+.listing-modal .contact {
+	margin-top: 1rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.listing-modal .MuiSvgIcon-root {
+	font-size: 3rem;
+}
+
+.add-modal .modal-header {
+	background: var(--blue);
 	color: var(--white);
 }
 
@@ -116,20 +182,193 @@ body {
 
 .modal .btn {
 	color: var(--white);
-	background: var(--black);
 	border: 0;
 	border-radius: 5rem;
-	width: 9rem;
-	font-size: 1.5rem;
+	width: 7rem;
+	font-size: 1rem;
 	font-weight: 100;
 }
 
+.modal .btn:hover {
+	background: var(--light-grey);
+}
+
+.modal .close-btn {
+	background: var(--grey);
+}
+
+.modal .add-btn {
+	background: var(--blue);
+}
+
+.modal .delete-btn {
+	background: var(--red);
+}
+
 .modal h1 {
-	font-size: 1.7rem;
+	font-size: 1.5rem;
 }
 
 .modal h2 {
-	font-size: 1.3rem;
+	font-size: 1rem;
+}
+
+.add-modal .form-group {
+	margin-bottom: 2rem;
+	display: block;
+}
+
+.add-modal .form-label {
+	color: var(--black);
+	margin-right: 1rem;
+}
+
+.add-modal .form-control {
+	color: var(--black);
+}
+
+.add-modal .form-text {
+	color: var(--light-grey);
+	margin: none;
+	display: block;
+}
+
+.add-modal .form-select {
+	color: var(--black);
+	margin: 0;
+	width: 7rem;
+	display: inline;
+}
+
+.add-modal .form-check-label {
+	font-size: 0.8rem;
+	color: var(--black);
+}
+
+.add-modal .form-check-input {
+	font-size: 0.7rem;
+	margin-top: 0.4rem;
+	text-align: center;
+	outline: 0.1rem solid var(--black);
+	border: none;
+}
+
+.add-modal .form-check-input:checked {
+	border: 0.1rem solid var(--white);
+	background: var(--black);
+}
+
+.add-modal .image-input input[type="file"] {
+	display: none;
+}
+
+.add-modal .image-input {
+	background: var(--black);
+	color: var(--white);
+	padding: 0.2rem 0.6rem;
+	font-size: 0.8rem;
+	border-radius: 3rem;
+}
+
+.add-modal .image-input:hover {
+	cursor: pointer;
+	background: var(--light-grey);
+	color: var(--white);
+}
+
+.add-modal .carousel {
+	height: 15rem;
+}
+
+.add-modal img {
+	display: block;
+	margin: 2rem auto;
+	max-width: 20rem;
+	max-height: 10rem;
+}
+
+.pending-contract-modal .modal-header {
+	background: var(--green);
+	color: var(--black);
+}
+
+.pending-contract-modal .form-group {
+	margin-bottom: 2rem;
+	display: block;
+}
+
+.pending-contract-modal .form-label {
+	color: var(--black);
+	margin-right: 1rem;
+}
+
+.pending-contract-modal .form-control {
+	color: var(--black);
+}
+
+.pending-contract-modal .form-text {
+	color: var(--light-grey);
+	margin: none;
+	display: block;
+}
+
+.pending-contract-modal .pdf-input input[type="file"] {
+	display: none;
+}
+
+.pending-contract-modal .pdf-input {
+	background: var(--black);
+	color: var(--white);
+	padding: 0.2rem 0.6rem;
+	font-size: 0.8rem;
+	border-radius: 3rem;
+}
+
+.pending-contract-modal .pdf-input:hover {
+	cursor: pointer;
+	background: var(--light-grey);
+	color: var(--white);
+}
+
+.pending-contract-modal a {
+	margin-left: 1rem;
+	color: var(--black);
+}
+
+.pending-contract-modal .accept-btn {
+	background: var(--blue);
+	color: var(--white);
+}
+
+.rate-contract-modal .modal-header {
+	background: var(--yellow);
+	color: var(--black);
+}
+
+.rate-contract-modal .form-group {
+	margin-bottom: 2rem;
+	display: block;
+}
+
+.rate-contract-modal .form-label {
+	color: var(--black);
+	margin-right: 1rem;
+}
+
+.rate-contract-modal .MuiRating-root {
+	display: block;
+	color: var(--yellow);
+}
+
+.rate-contract-modal .form-text {
+	color: var(--light-grey);
+	margin: none;
+	display: block;
+}
+
+.rate-contract-modal .submit-btn {
+	background: var(--blue);
+	color: var(--white);
 }
 
 /* ========================= Navigation Bar Styles ========================= */
@@ -141,8 +380,18 @@ body {
 }
 
 .navbar-brand {
-	font-size: 1.4rem;
 	cursor: pointer;
+	display: flex;
+}
+
+.navbar-brand img {
+	width: 1rem;
+	margin-right: 0.5rem;
+}
+
+.navbar-brand h1 {
+	font-size: 1.5rem;
+	margin: auto;
 }
 
 /* ========================= Content Layout Styles ========================= */
@@ -231,26 +480,27 @@ body {
 	background-color: var(--orange);
 }
 
-/* ========================= Home Page Styles ========================= */
+/* ========================= Dashboard Styles ========================= */
 
 /* Home page rating */
-.home-page h2 {
-	margin: 0;
+.dashboard h2 {
+	margin: 0 0 1rem 0;
+	color: var(--black);
 }
 
-.home-page .rating {
+.dashboard .rating {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 }
 
-.home-page .rating text {
+.dashboard .rating text {
 	font-weight: 100;
 	fill: var(--black);
 }
 
 /* Home page buttons */
-.home-page .btn {
+.dashboard .btn {
 	width: 5rem;
 	margin: 0 auto 2rem auto;
 	width: max-content;
@@ -259,43 +509,96 @@ body {
 	padding: 0.5rem 1.5rem 0.5rem 1.5rem;
 }
 
-.home-page .view-rent-btn {
-	background: var(--blue);
+.rating h2 {
+	margin: 0;
 }
 
-.home-page .view-payments-btn {
-	background: var(--orange);
+.dashboard .accordion-button {
+	color: var(--black);
+	background: var(--light-blue);
 }
 
-/* ========================= Rent Page Styles ========================= */
+.current-contracts.row.row-cols-auto {
+	justify-content: center;
+}
 
-/* ========================= Listing Cards Styles ========================= */
+/* ========================= Payments Styles ========================= */
+
+.payments .accordion-button {
+	color: var(--black);
+	background: var(--light-blue);
+}
+
+.payments > .row {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	color: var(--black);
+}
+
+.payments .total {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 15rem;
+	height: 5rem;
+	border-radius: 1rem;
+	background-color: var(--white);
+	box-shadow: var(--card-shadow);
+	font-size: 2rem;
+	margin: 0.5rem 0 1rem 0;
+}
+
+.payments .invoice-btn {
+	width: 10rem;
+	margin-bottom: 2rem;
+	color: var(--white);
+	background-color: var(--orange);
+	border: none;
+}
+
+.payments .ATHMovilbtn {
+	min-width: 1rem;
+	min-height: 1rem;
+	width: 15rem;
+	height: 1rem;
+	padding: 2rem;
+	margin-bottom: 2rem;
+	box-shadow: var(--card-shadow);
+}
+
+/* ========================= Cards Styles ========================= */
 
 .card {
 	box-shadow: var(--card-shadow);
 	border: none;
 	border-radius: 1rem;
-	width: 18rem;
-	height: 25rem;
 	margin-bottom: 2rem;
 }
 
-.card:hover {
-	cursor: pointer;
+.card .card-title {
+	margin: 0 0 0.5rem 0;
+	white-space: nowrap;
+	overflow: hidden;
 }
 
-.card img {
-	height: 13rem;
-	border-radius: 1rem 1rem 0 0;
-	margin: auto;
+.card .card-text {
+	margin: 0 0 0.2rem 0;
+}
+
+.card .MuiRating-root {
+	margin: 0 0 0.5rem 0;
 }
 
 .address-label {
 	display: flex;
-	margin: 1rem 0;
+	margin: 0 0 0.5rem 0;
 	font-size: 0.7rem;
 	width: 13rem;
 	color: var(--black);
+	/* border: 1px solid red; */
+	height: 2.5rem;
+	overflow: visible;
 }
 
 .tags {
@@ -316,15 +619,36 @@ body {
 	margin: 0 0.1rem 0 0 !important;
 }
 
+/* ========================= Listing Cards Styles ========================= */
+
+.listing-card {
+	width: 20rem;
+	height: 25rem;
+}
+
+.listing-card:hover {
+	cursor: pointer;
+}
+
+.listing-card img {
+	height: 13rem;
+	border-radius: 1rem 1rem 0 0;
+	margin: auto;
+}
+
 /* ========================= Property Cards Styles ========================= */
 
 .property-card {
-	width: 18rem;
-	height: 22rem;
+	width: 15rem;
+	height: 20rem;
+}
+
+.property-card:hover {
+	cursor: pointer;
 }
 
 .property-card img {
-	height: 13rem;
+	height: 12rem;
 	border-radius: 1rem 1rem 0 0;
 	margin: auto;
 }
@@ -335,15 +659,78 @@ body {
 	color: var(--grey);
 	font-size: 3rem;
 	text-align: center;
-	/* border: 1px solid red; */
 	margin-top: 40%;
 }
 
+/* ========================= Contract Card Styles ========================= */
+.pending-contract-card {
+	width: 20rem;
+	height: 15rem;
+	margin-bottom: 2rem;
+}
+
+.pending-contract-card .card-header {
+	color: var(--orange);
+}
+
+.pending-contract-card .btn {
+	font-size: 0.8rem;
+	margin: 0.5rem;
+	width: 8rem;
+}
+
+.pending-contract-card .accept-btn {
+	background-color: var(--blue);
+}
+
+.pending-contract-card .deny-btn {
+	background-color: var(--grey);
+}
+
+.pending-contract-card .btn:hover {
+	background-color: var(--light-grey);
+}
+
+.active-contract-card {
+	width: 20rem;
+	height: 25rem;
+	margin-bottom: 2rem;
+}
+
+.active-contract-card .card-header {
+	color: var(--blue);
+	display: flex;
+	justify-content: space-between;
+}
+
+.active-contract-card .card-header .contract-id {
+	color: var(--grey);
+}
+
+.active-contract-card .btn:hover {
+	background-color: var(--light-grey);
+}
+
+.active-contract-card .contract-btn {
+	font-size: 0.8rem;
+	width: 100%;
+	height: 2.5rem;
+	margin: 1rem 0 1rem 0;
+	background-color: var(--blue);
+}
+
+.active-contract-card .rate-btn {
+	font-size: 0.8rem;
+	width: 100%;
+	background-color: var(--yellow);
+	color: var(--black);
+}
 /* ========================= Spinner Styles ========================= */
 
 .spinner-border {
 	position: absolute;
-	margin: 10rem 50vw auto 50vw;
+	left: calc(50vw - 1rem);
+	top: 20rem;
 	color: var(--black);
 }
 

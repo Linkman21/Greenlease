@@ -2,19 +2,31 @@ import BathtubOutlinedIcon from "@mui/icons-material/BathtubOutlined";
 import BedOutlinedIcon from "@mui/icons-material/BedOutlined";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import PetsOutlinedIcon from "@mui/icons-material/PetsOutlined";
+import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
+import { Rating } from "@mui/material";
 import { useEffect, useState } from "react";
+import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
+import ListGroup from "react-bootstrap/ListGroup";
 import Spinner from "react-bootstrap/Spinner";
 import Col from "react-bootstrap/esm/Col";
-import { AddPropertyView, ListingView, PropertyView } from "./Modal";
+import { deleteContract, getPropertyRating } from "../api/fetcher";
+import {
+	AddListingView,
+	AddPropertyView,
+	ListingView,
+	PendingContractView,
+	PropertyView,
+	RateContractView,
+} from "./Modal";
 
-export function AddCard() {
+export function AddPropertyCard() {
 	const [openView, setOpenView] = useState(false);
 	return (
 		<>
 			<Col>
-				<Card onClick={() => setOpenView(true)}>
+				<Card className="property-card" onClick={() => setOpenView(true)}>
 					<Card.Body>
 						<div className="add-text">
 							Add
@@ -28,7 +40,30 @@ export function AddCard() {
 	);
 }
 
-export function ListingCards({ listings }) {
+export function AddListingCard({ properties }) {
+	const [openView, setOpenView] = useState(false);
+	return (
+		<>
+			<Col>
+				<Card className="listing-card" onClick={() => setOpenView(true)}>
+					<Card.Body>
+						<div className="add-text">
+							Add
+							<br />+
+						</div>
+					</Card.Body>
+				</Card>
+			</Col>
+			<AddListingView
+				properties={properties}
+				open={openView}
+				setOpen={setOpenView}
+			/>
+		</>
+	);
+}
+
+export function ListingCards({ listings, filtered }) {
 	const [currentListing, setCurrentListing] = useState(null);
 	const [openView, setOpenView] = useState(false);
 
@@ -37,7 +72,7 @@ export function ListingCards({ listings }) {
 		return <Spinner />;
 	}
 
-	if (listings.length === 0) {
+	if (listings.length === 0 && filtered) {
 		return <Container>No matches found.</Container>;
 	}
 
@@ -45,42 +80,12 @@ export function ListingCards({ listings }) {
 		<>
 			{listings.map((listing, index) => {
 				return (
-					<Col key={index}>
-						<Card
-							onClick={() => {
-								setCurrentListing(listing);
-								setOpenView(true);
-							}}
-						>
-							<Card.Img variant="top" src={listing.pictures[0]} />
-							<Card.Body>
-								<Card.Title>{listing.name}</Card.Title>
-								<Card.Text>${listing.price}/month</Card.Text>
-								<div className="address-label">
-									<LocationOnOutlinedIcon
-										style={{ color: "#209fa8", margin: "0 0.5rem 0 0.1rem" }}
-									/>
-									{listing.address}
-								</div>
-
-								<div className="tags">
-									<div className="tag">
-										<BedOutlinedIcon className="icon" /> {listing.bedrooms} bed
-									</div>
-									<div className="tag">
-										<BathtubOutlinedIcon className="icon" />
-										{listing.bathrooms} bath
-									</div>
-									{!listing.pet_flag ? null : (
-										<div className="tag">
-											<PetsOutlinedIcon className="icon" />
-											Pet Friendly
-										</div>
-									)}
-								</div>
-							</Card.Body>
-						</Card>
-					</Col>
+					<ListingCard
+						key={index}
+						listing={listing}
+						setCurrentListing={setCurrentListing}
+						setOpenView={setOpenView}
+					/>
 				);
 			})}
 			<ListingView
@@ -89,6 +94,61 @@ export function ListingCards({ listings }) {
 				listing={currentListing}
 			/>
 		</>
+	);
+}
+
+function ListingCard({ listing, setCurrentListing, setOpenView }) {
+	const [rating, setRating] = useState(0);
+	const handleRating = async () => {
+		setRating((await getPropertyRating(listing.property_id)) / 20);
+	};
+	useEffect(() => {
+		handleRating();
+	}, []);
+
+	// Debug
+	// useEffect(() => {
+	// 	console.log(rating);
+	// }, [rating]);
+
+	return (
+		<Col>
+			<Card
+				onClick={() => {
+					setCurrentListing(listing);
+					setOpenView(true);
+				}}
+				className="listing-card"
+			>
+				<Card.Img variant="top" src={listing.pictures[0]} />
+				<Card.Body>
+					<Card.Title>{listing.name}</Card.Title>
+					<Card.Text>${listing.price}/month</Card.Text>
+					<Rating value={rating} readOnly />
+					<div className="address-label">
+						<LocationOnOutlinedIcon
+							style={{ color: "#209fa8", margin: "0 0.5rem 0 0.1rem" }}
+						/>
+						{listing.address}
+					</div>
+					<div className="tags">
+						<div className="tag">
+							<BedOutlinedIcon className="icon" /> {listing.bedrooms} bed
+						</div>
+						<div className="tag">
+							<BathtubOutlinedIcon className="icon" />
+							{listing.bathrooms} bath
+						</div>
+						{!listing.pet_flag ? null : (
+							<div className="tag">
+								<PetsOutlinedIcon className="icon" />
+								Pet Friendly
+							</div>
+						)}
+					</div>
+				</Card.Body>
+			</Card>
+		</Col>
 	);
 }
 
@@ -131,6 +191,236 @@ export function PropertyCards({ properties }) {
 							setOpen={setOpenView}
 							property={value}
 						/>
+					</Col>
+				);
+			})}
+		</>
+	);
+}
+
+export function ActiveContractCards({ activeContracts }) {
+	const [openView, setOpenView] = useState(false);
+	if (!activeContracts) return;
+	return (
+		<>
+			{activeContracts.map((contract, index) => {
+				return (
+					<Col key={index}>
+						<Card className="active-contract-card">
+							<Card.Header>
+								Active
+								<div className="contract-id">
+									Contract ID: {contract.contract_id}
+								</div>
+							</Card.Header>
+							<Card.Body>
+								<Card.Title>{contract.name}</Card.Title>
+								<Card.Subtitle className="mb-2 text-muted">
+									Starts: {new Date(contract.date_start).toLocaleDateString()}
+									<br />
+									Ends: {new Date(contract.date_end).toLocaleDateString()}
+								</Card.Subtitle>
+								<ListGroup variant="flush">
+									<ListGroup.Item>
+										Tenant: {contract.tenant_first_name}{" "}
+										{contract.tenant_last_name}
+										<br />(
+										{contract.tenant_phone.substr(0, 3) +
+											"-" +
+											contract.tenant_phone.substr(3, 3) +
+											"-" +
+											contract.tenant_phone.substr(6, 4)}
+										)
+									</ListGroup.Item>
+									<ListGroup.Item>
+										Landlord: {contract.landlord_first_name}{" "}
+										{contract.landlord_last_name}
+										<br />(
+										{contract.landlord_phone.substr(0, 3) +
+											"-" +
+											contract.landlord_phone.substr(3, 3) +
+											"-" +
+											contract.landlord_phone.substr(6, 4)}
+										)
+									</ListGroup.Item>
+								</ListGroup>
+								<Button
+									className="contract-btn"
+									href={contract.pdf}
+									target="_blank"
+								>
+									View Contract <PictureAsPdfIcon />
+								</Button>
+								<Button className="rate-btn" onClick={() => setOpenView(true)}>
+									Rate Contract
+								</Button>
+							</Card.Body>
+						</Card>
+						<RateContractView
+							open={openView}
+							setOpen={setOpenView}
+							contract={contract}
+						/>
+					</Col>
+				);
+			})}
+		</>
+	);
+}
+
+export function PendingContractCards({ pendingContracts }) {
+	const [openView, setOpenView] = useState(false);
+	const handleRevoke = async (contract_id) => {
+		await deleteContract(contract_id);
+		window.location.reload(false);
+	};
+	if (!pendingContracts) return;
+	return (
+		<>
+			{pendingContracts.map((contract, index) => {
+				return (
+					<Col key={index}>
+						<Card className="pending-contract-card">
+							<Card.Header>Pending</Card.Header>
+							<Card.Body>
+								<Card.Title>{contract.name}</Card.Title>
+								<Card.Subtitle className="mb-2 text-muted">
+									Requested by:
+								</Card.Subtitle>
+								<Card.Text>
+									{contract.tenant_first_name} {contract.tenant_last_name}
+									<br />(
+									{contract.tenant_phone.substr(0, 3) +
+										"-" +
+										contract.tenant_phone.substr(3, 3) +
+										"-" +
+										contract.tenant_phone.substr(6, 4)}
+									)
+								</Card.Text>
+								<Button
+									className="deny-btn"
+									onClick={() => handleRevoke(contract.contract_id)}
+								>
+									Deny
+								</Button>
+								<Button
+									className="accept-btn"
+									onClick={() => setOpenView(true)}
+								>
+									Accept
+								</Button>
+							</Card.Body>
+						</Card>
+						<PendingContractView
+							open={openView}
+							setOpen={setOpenView}
+							contract={contract}
+						/>
+					</Col>
+				);
+			})}
+		</>
+	);
+}
+
+export function CurrentContractCards({ currentContracts }) {
+	const [openView, setOpenView] = useState(false);
+	const handleRevoke = async (contract_id) => {
+		await deleteContract(contract_id);
+		window.location.reload(false);
+	};
+	if (!currentContracts) return;
+	return (
+		<>
+			{currentContracts.map((contract, index) => {
+				return contract.date_start ? (
+					<Col key={index}>
+						<Card className="active-contract-card">
+							<Card.Header>
+								Active
+								<div className="contract-id">
+									Contract ID: {contract.contract_id}
+								</div>
+							</Card.Header>
+							<Card.Body>
+								<Card.Title>{contract.name}</Card.Title>
+								<Card.Subtitle className="mb-2 text-muted">
+									Starts: {new Date(contract.date_start).toLocaleDateString()}
+									<br />
+									Ends: {new Date(contract.date_end).toLocaleDateString()}
+								</Card.Subtitle>
+								<ListGroup variant="flush">
+									<ListGroup.Item>
+										Tenant: {contract.tenant_first_name}{" "}
+										{contract.tenant_last_name}
+										<br />(
+										{contract.tenant_phone.substr(0, 3) +
+											"-" +
+											contract.tenant_phone.substr(3, 3) +
+											"-" +
+											contract.tenant_phone.substr(6, 4)}
+										)
+									</ListGroup.Item>
+									<ListGroup.Item>
+										Landlord: {contract.landlord_first_name}{" "}
+										{contract.landlord_last_name}
+										<br />(
+										{contract.landlord_phone.substr(0, 3) +
+											"-" +
+											contract.landlord_phone.substr(3, 3) +
+											"-" +
+											contract.landlord_phone.substr(6, 4)}
+										)
+									</ListGroup.Item>
+								</ListGroup>
+								<Button
+									className="contract-btn"
+									href={contract.pdf}
+									target="_blank"
+								>
+									View Contract <PictureAsPdfIcon />
+								</Button>
+								<Button className="rate-btn" onClick={() => setOpenView(true)}>
+									Rate Contract
+								</Button>
+							</Card.Body>
+						</Card>
+						<RateContractView
+							open={openView}
+							setOpen={setOpenView}
+							contract={contract}
+						/>
+					</Col>
+				) : (
+					<Col key={index}>
+						<Card className="pending-contract-card">
+							<Card.Header>Pending</Card.Header>
+							<Card.Body>
+								<Card.Title>{contract.name}</Card.Title>
+								<Card.Subtitle className="mb-2 text-muted">
+									Landlord Details:
+								</Card.Subtitle>
+								<ListGroup variant="flush">
+									<ListGroup.Item>
+										Landlord: {contract.landlord_first_name}{" "}
+										{contract.landlord_last_name}
+										<br />(
+										{contract.landlord_phone.substr(0, 3) +
+											"-" +
+											contract.landlord_phone.substr(3, 3) +
+											"-" +
+											contract.landlord_phone.substr(6, 4)}
+										)
+									</ListGroup.Item>
+								</ListGroup>
+								<Button
+									className="deny-btn"
+									onClick={() => handleRevoke(contract.contract_id)}
+								>
+									Revoke
+								</Button>
+							</Card.Body>
+						</Card>
 					</Col>
 				);
 			})}

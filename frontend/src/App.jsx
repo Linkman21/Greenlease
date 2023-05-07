@@ -1,22 +1,19 @@
 import { lazy } from "react";
-import Spinner from "react-bootstrap/esm/Spinner";
 import { Route, Routes } from "react-router-dom";
 import PageLayout from "./layout/PageLayout";
-import Landing from "./pages/Landing";
+import Authentication from "./pages/Authentication";
 
 const Listings = lazy(() => import("./pages/Listings"));
-const Home = lazy(() => import("./pages/Home"));
-const Rent = lazy(() => import("./pages/Rent"));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Payments = lazy(() => import("./pages/Payments"));
 
 export default function App() {
 	return (
 		<Routes>
-			<Route path="/" element={<Landing />} />
+			<Route path="/authentication" element={<Authentication />} />
 			<Route element={<PageLayout />}>
-				<Route path="/listings" element={<Listings />} />
-				<Route path="/home" element={<Home />} />
-				<Route path="/rent" element={<Rent />} />
+				<Route path="/" element={<Listings />} />
+				<Route path="/Dashboard" element={<Dashboard />} />
 				<Route path="/payments" element={<Payments />} />
 			</Route>
 		</Routes>

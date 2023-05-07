@@ -5,21 +5,32 @@ import Spinner from "react-bootstrap/Spinner";
 export default function Map({ address }) {
 	// Google Maps Api Key
 	const apiKey = "AIzaSyA6yY_cU0oAtUgzmfwNNdPZSaMbKnlHhvg";
+	const defaultAddress = "Universidad de Puerto Rico, Mayaguez, Puerto Rico";
 
 	// Address Coordinates
 	const [pin, setPin] = useState(null);
 	const getPin = async () => {
-		const response = await fetch(
-			"https://maps.googleapis.com/maps/api/geocode/json?address=" +
-				address +
-				"&key=" +
-				apiKey
-		);
-		const data = await response.json();
-		setPin(data.results[0].geometry.location);
-
-		console.log("Address: ", address);
-		console.log("Pin: ", data.results[0]);
+		try {
+			const response = await fetch(
+				"https://maps.googleapis.com/maps/api/geocode/json?address=" +
+					address +
+					"&key=" +
+					apiKey
+			);
+			const data = await response.json();
+			setPin(data.results[0].geometry.location);
+		} catch (e) {
+			console.log(e);
+			console.log("Address not found, defaulting to UPRM");
+			const response = await fetch(
+				"https://maps.googleapis.com/maps/api/geocode/json?address=" +
+					defaultAddress +
+					"&key=" +
+					apiKey
+			);
+			const data = await response.json();
+			setPin(data.results[0].geometry.location);
+		}
 	};
 
 	useEffect(() => {
@@ -36,11 +47,7 @@ export default function Map({ address }) {
 	if (!isLoaded) return <Spinner />;
 
 	return (
-		<GoogleMap
-			mapContainerStyle={{ width: "auto", height: "400px" }}
-			center={pin}
-			zoom={15}
-		>
+		<GoogleMap mapContainerClassName="map" center={pin} zoom={15}>
 			<MarkerF position={pin} />
 		</GoogleMap>
 	);

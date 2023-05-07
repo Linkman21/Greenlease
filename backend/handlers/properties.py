@@ -46,3 +46,12 @@ class PropertiesHandler:
                 [property_id, landlord_id, name, address, bedrooms, bathrooms, pictures])
             return jsonify(Property=result), 201
         return jsonify("Missing Arguments"), 404
+
+    # DELETE
+    def deleteProperty(self, property_id):
+        dao = PropertiesDAO()
+        if not property_id:
+            return jsonify("Missing Arguments"), 404
+
+        result = dao.deleteProperty(property_id)
+        return jsonify(result)

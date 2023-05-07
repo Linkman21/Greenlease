@@ -4,20 +4,23 @@
 	"version": "0.0.0",
 	"type": "module",
 	"scripts": {
-		"dev": "vite",
-		"api": "cd ../backend && python server.py",
+		"server": "cd ../backend & python server.py",
+		"client": "vite",
+		"dev": "concurrently \"npm run client\" \"npm run server\"",
 		"build": "vite build",
 		"preview": "vite preview",
-		"prestart": "npm run build",
-		"start": "python ../backend/server.py"
+		"preproduction": "npm run build",
+		"production": "python ../backend/server.py"
 	},
 	"dependencies": {
 		"@emotion/styled": "^11.10.6",
 		"@mui/icons-material": "^5.11.11",
+		"@mui/material": "^5.12.3",
 		"@mui/styled-engine": "^5.11.11",
 		"@react-google-maps/api": "^2.18.1",
 		"apexcharts": "^3.37.0",
 		"bootstrap": "^5.2.3",
+		"concurrently": "^8.0.1",
 		"react": "^18.2.0",
 		"react-apexcharts": "^1.4.0",
 		"react-bootstrap": "^2.7.2",
