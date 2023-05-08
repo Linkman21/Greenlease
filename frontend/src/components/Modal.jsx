@@ -93,7 +93,7 @@ export function ListingView({ open, setOpen, listing }) {
 	const [user, setUser] = useLocalStorage("user", null);
 	const [loading, setLoading] = useState(false);
 	const handleRemove = async () => {
-		setLoading(<Spinner />);
+		setLoading(true);
 		await deleteListing(listing.listing_id);
 		setOpen(false);
 		window.location.reload(false);
@@ -165,7 +165,7 @@ export function ListingView({ open, setOpen, listing }) {
 				{user.type == "landlord" ? (
 					user.landlord_id != listing.landlord_id ? null : (
 						<Button className="delete-btn" type="button" onClick={handleRemove}>
-							Remove
+							{loading ? <Spinner className="loading-btn" /> : "Remove"}
 						</Button>
 					)
 				) : (
@@ -883,20 +883,20 @@ export function CreateInvoiceView({ user, open, setOpen }) {
 
 	// Handle add listing
 	const handleCreate = async () => {
-		// if (!due || !fee || !selectedContract) {
-		// 	alert("Error: Missing fields.");
-		// 	return;
-		// }
-		// console.log({
-		// 	contract: selectedContract,
-		// 	due: due,
-		// 	fee: fee,
-		// });
+		if (!due || !fee || !selectedContract) {
+			alert("Error: Missing fields.");
+			return;
+		}
+		console.log({
+			contract: selectedContract,
+			due: due,
+			fee: fee,
+		});
 
 		setLoading(true);
-		// await postInvoice(selectedContract.contract_id, due, fee);
-		// setOpen(false);
-		// window.location.reload(false);
+		await postInvoice(selectedContract.contract_id, due, fee);
+		setOpen(false);
+		window.location.reload(false);
 	};
 
 	useEffect(() => {

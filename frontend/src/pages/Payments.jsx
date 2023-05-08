@@ -138,7 +138,7 @@ function LandlordPayments({ user }) {
 											<tr key={index}>
 												<td>{invoice.contract_name}</td>
 												<td>
-													{new Date(invoice.date_received).toLocaleDateString()}
+													{new Date(invoice.date_issued).toLocaleDateString()}
 												</td>
 												<td>
 													{new Date(invoice.date_paid).toLocaleDateString()}
@@ -148,7 +148,7 @@ function LandlordPayments({ user }) {
 													$
 													{late
 														? invoice.total + invoice.late_fee
-														: invoice.total}
+														: invoice.total_paid}
 												</td>
 											</tr>
 										);

@@ -4,6 +4,7 @@ import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Button from "react-bootstrap/esm/Button";
+import Spinner from "react-bootstrap/esm/Spinner";
 import { useNavigate } from "react-router-dom";
 import { addUser, getUser } from "../api/fetcher";
 import logo from "../assets/logo_dark.svg";
@@ -34,13 +35,14 @@ export default function Landing() {
 	const [newType, setNewType] = useState("");
 
 	// Handle user login procedure
+	const [loadingLogin, setLoadingLogin] = useState(false);
 	const handleLogin = async () => {
 		// Check for empty fields
 		if (email === "" || password === "" || type === "") {
 			setFieldErrorShow(true);
 			return;
 		}
-
+		setLoadingLogin(true);
 		// Check if user exists
 		const checkUser = await getUser({
 			email: email,
@@ -59,6 +61,7 @@ export default function Landing() {
 	};
 
 	// Handle user registration procedure
+	const [loadingRegister, setLoadingRegister] = useState(false);
 	const handleRegister = async () => {
 		if (
 			newEmail === "" ||
@@ -70,6 +73,7 @@ export default function Landing() {
 			setFieldErrorShow(true);
 			return;
 		}
+		setLoadingRegister(true);
 
 		// Create user
 		const createUser = await addUser({
@@ -97,6 +101,10 @@ export default function Landing() {
 		setEmail(user.email);
 		setPassword(user.password);
 		setType(user.type);
+		return () => {
+			setLoadingLogin(false);
+			setLoadingRegister(false);
+		};
 	}, []);
 
 	return (
@@ -157,7 +165,7 @@ export default function Landing() {
 							</Form.Group>
 
 							<Button variant="secondary" type="button" onClick={handleLogin}>
-								Login
+								{loadingLogin ? <Spinner className="loading-btn" /> : "Login"}
 							</Button>
 						</Form>
 					</Col>
@@ -239,7 +247,11 @@ export default function Landing() {
 								type="button"
 								onClick={handleRegister}
 							>
-								Register
+								{loadingRegister ? (
+									<Spinner className="loading-btn" />
+								) : (
+									"Register"
+								)}
 							</Button>
 						</Form>
 					</Col>
