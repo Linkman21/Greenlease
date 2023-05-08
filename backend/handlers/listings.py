@@ -61,7 +61,7 @@ class ListingsHandler:
 
     # =================== POST ===================
     def addListing(self, landlord_id, property_id, title, description, pet_flag, price):
-        if landlord_id and property_id and title and description and pet_flag and price:
+        if not landlord_id and not property_id and not title and not description and not pet_flag and not price:
             return jsonify("Missing Arguments"), 404
         dao = ListingsDAO()
         result = dao.addListing(

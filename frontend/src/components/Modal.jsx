@@ -599,7 +599,7 @@ export function AddListingView({ properties, open, setOpen }) {
 							<InputGroup.Text>$</InputGroup.Text>
 							<Form.Control
 								type="text"
-								value={price}
+								value={price ? price : ""}
 								onChange={(e) =>
 									setPrice(
 										e.target.value
