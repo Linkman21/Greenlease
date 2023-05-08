@@ -325,8 +325,14 @@ export async function getCurrentContract(tenant_id) {
 	}
 }
 
-export async function signContract(contract_id, date_start, date_end, pdf) {
-	const api = `/api/contracts/sign/?contract_id=${contract_id}&date_start=${date_start}&date_end=${date_end}`;
+export async function signContract(
+	contract_id,
+	date_start,
+	date_end,
+	pdf,
+	price
+) {
+	const api = `/api/contracts/sign/?contract_id=${contract_id}&date_start=${date_start}&date_end=${date_end}&price=${price}`;
 	try {
 		const response = await fetch(api, {
 			method: "PUT",
@@ -356,14 +362,8 @@ export async function deleteContract(contract_id) {
 }
 
 // Invoices
-export async function postInvoice(
-	landlord_id,
-	tenant_id,
-	date_due,
-	late_fee,
-	total
-) {
-	const api = `/api/invoices/post/?landlord_id=${landlord_id}&tenant_id=${tenant_id}&date_due=${date_due}&late_fee=${late_fee}&total=${total}`;
+export async function postInvoice(contract_id, date_due, late_fee) {
+	const api = `/api/invoices/post/?contract_id=${contract_id}&date_due=${date_due}&late_fee=${late_fee}`;
 	try {
 		const response = await fetch(api, { method: "POST" });
 		const data = await response.json();
@@ -438,6 +438,18 @@ export async function getInvoicesTotalTenant(tenant_id) {
 	const api = `/api/invoices/total/tenant/?tenant_id=${tenant_id}`;
 	try {
 		const response = await fetch(api, { method: "GET" });
+		const data = await response.json();
+		return data;
+	} catch (e) {
+		console.log(e);
+		return null;
+	}
+}
+
+export async function payInvoice(invoice_id, total_paid) {
+	const api = `/api/invoices/pay/?invoice_id=${invoice_id}&total_paid=${total_paid}`;
+	try {
+		const response = await fetch(api, { method: "PUT" });
 		const data = await response.json();
 		return data;
 	} catch (e) {

@@ -20,21 +20,19 @@ class ContractsHandler:
         result['tenant_first_name'] = row[11]
         result['tenant_last_name'] = row[12]
         result['tenant_phone'] = row[13]
+        result['price'] = row[14]
         return result
 
     def postContract(self, landlord_id, tenant_id, property_id):
         if not landlord_id and not tenant_id and not property_id:
             return jsonify("Missing Arguments"), 404
-
         dao = ContractsDAO()
-        contract = dao.postContract(landlord_id, tenant_id, property_id)
-        result = self.build_contract_dict(contract)
-        return jsonify(Contract=result), 201
+        result = dao.postContract(landlord_id, tenant_id, property_id)
+        return jsonify(result), 201
 
     def getActiveContracts(self, landlord_id):
         if not landlord_id:
             return jsonify("Missing Arguments"), 404
-
         dao = ContractsDAO()
         contracts_list = dao.getActiveContracts(landlord_id)
         result = []
@@ -46,7 +44,6 @@ class ContractsHandler:
     def getPendingContracts(self, landlord_id):
         if not landlord_id:
             return jsonify("Missing Arguments"), 404
-
         dao = ContractsDAO()
         contracts_list = dao.getPendingContracts(landlord_id)
         result = []
@@ -67,19 +64,16 @@ class ContractsHandler:
             result.append(dict)
         return jsonify(result)
 
-    def putContract(self, contract_id, date_start, date_end, pdf):
-        if not contract_id and not date_end and not date_start and not pdf:
+    def putContract(self, contract_id, date_start, date_end, pdf, price):
+        if not contract_id and not date_end and not date_start and not pdf and not price:
             return jsonify("Missing Arguments"), 404
-
         dao = ContractsDAO()
-        contract = dao.putContract(contract_id, date_start, date_end, pdf)
-        result = self.build_contract_dict(contract)
+        result = dao.putContract(contract_id, date_start, date_end, pdf, price)
         return jsonify(result), 201
 
     def deleteContract(self, contract_id):
         if not contract_id:
             return jsonify("Missing Arguments"), 404
-
         dao = ContractsDAO()
         result = dao.deleteContract(contract_id)
         return jsonify(result), 201

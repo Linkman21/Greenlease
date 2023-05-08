@@ -693,18 +693,12 @@ body {
 
 .active-contract-card {
 	width: 20rem;
-	height: 25rem;
+	height: 26rem;
 	margin-bottom: 2rem;
 }
 
 .active-contract-card .card-header {
 	color: var(--blue);
-	display: flex;
-	justify-content: space-between;
-}
-
-.active-contract-card .card-header .contract-id {
-	color: var(--grey);
 }
 
 .active-contract-card .btn:hover {
@@ -732,6 +726,17 @@ body {
 	left: calc(50vw - 1rem);
 	top: 20rem;
 	color: var(--black);
+}
+
+.loading-btn {
+	position: relative;
+	color: var(--white);
+	width: 1rem;
+	height: 1rem;
+	left: auto;
+	top: auto;
+	padding: none;
+	margin: auto;
 }
 
 /* Media Queries */

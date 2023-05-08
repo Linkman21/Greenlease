@@ -207,18 +207,15 @@ export function ActiveContractCards({ activeContracts }) {
 				return (
 					<Col key={index}>
 						<Card className="active-contract-card">
-							<Card.Header>
-								Active
-								<div className="contract-id">
-									Contract ID: {contract.contract_id}
-								</div>
-							</Card.Header>
+							<Card.Header>Active</Card.Header>
 							<Card.Body>
 								<Card.Title>{contract.name}</Card.Title>
 								<Card.Subtitle className="mb-2 text-muted">
 									Starts: {new Date(contract.date_start).toLocaleDateString()}
 									<br />
 									Ends: {new Date(contract.date_end).toLocaleDateString()}
+									<br />
+									Price: ${contract.price}/month
 								</Card.Subtitle>
 								<ListGroup variant="flush">
 									<ListGroup.Item>
@@ -270,8 +267,11 @@ export function ActiveContractCards({ activeContracts }) {
 
 export function PendingContractCards({ pendingContracts }) {
 	const [openView, setOpenView] = useState(false);
+	const [loading, setLoading] = useState(false);
 	const handleRevoke = async (contract_id) => {
+		setLoading(true);
 		await deleteContract(contract_id);
+		setLoading(false);
 		window.location.reload(false);
 	};
 	if (!pendingContracts) return;
@@ -301,7 +301,7 @@ export function PendingContractCards({ pendingContracts }) {
 									className="deny-btn"
 									onClick={() => handleRevoke(contract.contract_id)}
 								>
-									Deny
+									{loading ? <Spinner className="loading-btn" /> : "Deny"}
 								</Button>
 								<Button
 									className="accept-btn"
@@ -336,18 +336,15 @@ export function CurrentContractCards({ currentContracts }) {
 				return contract.date_start ? (
 					<Col key={index}>
 						<Card className="active-contract-card">
-							<Card.Header>
-								Active
-								<div className="contract-id">
-									Contract ID: {contract.contract_id}
-								</div>
-							</Card.Header>
+							<Card.Header>Active</Card.Header>
 							<Card.Body>
 								<Card.Title>{contract.name}</Card.Title>
 								<Card.Subtitle className="mb-2 text-muted">
 									Starts: {new Date(contract.date_start).toLocaleDateString()}
 									<br />
 									Ends: {new Date(contract.date_end).toLocaleDateString()}
+									<br />
+									Price: ${contract.price}/month
 								</Card.Subtitle>
 								<ListGroup variant="flush">
 									<ListGroup.Item>

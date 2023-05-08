@@ -199,9 +199,10 @@ def sign_contracts_endpoint():
     contract_id = request.args.get('contract_id')
     date_end = request.args.get('date_end')
     date_start = request.args.get('date_start')
+    price = request.args.get('price')
     pdf = request.get_json()
     if request.method == "PUT":
-        return ContractsHandler().putContract(contract_id, date_start, date_end, pdf)
+        return ContractsHandler().putContract(contract_id, date_start, date_end, pdf, price)
     else:
         return jsonify("Not Supported"), 405
 
@@ -218,13 +219,11 @@ def delete_contract_endpoint():
 # ============= Invoices ======================
 @app.route('/api/invoices/post/', methods=["POST"])
 def post_invoice_endpoint():
-    landlord_id = request.args.get('landlord_id')
-    tenant_id = request.args.get('tenant_id')
+    contract_id = request.args.get('contract_id')
     date_due = request.args.get('date_due')
     late_fee = request.args.get('late_fee')
-    total = request.args.get('total')
     if request.method == "POST":
-        return InvoicesHandler().postInvoice(landlord_id, tenant_id, date_due, late_fee, total)
+        return InvoicesHandler().postInvoice(contract_id, date_due, late_fee)
     else:
         return jsonify("Not Supported"), 405
 
@@ -279,6 +278,16 @@ def invoices_total_tenant_endpoint():
     tenant_id = request.args.get('tenant_id')
     if request.method == "GET":
         return InvoicesHandler().getInvoicesTotalTenant(tenant_id)
+    else:
+        return jsonify("Not Supported"), 405
+
+
+@app.route('/api/invoices/pay/', methods=["PUT"])
+def invoices_pay_endpoint():
+    invoice_id = request.args.get('invoice_id')
+    total_paid = request.args.get('total_paid')
+    if request.method == "PUT":
+        return InvoicesHandler().payInvoice(invoice_id, total_paid)
     else:
         return jsonify("Not Supported"), 405
 

@@ -7,22 +7,21 @@ class InvoicesHandler:
     def build_invoice_dict(self, row):
         result = {}
         result['invoice_id'] = row[0]
-        result['landlord_id'] = row[1]
-        result['tenant_id'] = row[2]
-        result['date_received'] = row[3]
+        result['contract_id'] = row[1]
+        result['date_issued'] = row[2]
+        result['date_due'] = row[3]
         result['date_paid'] = row[4]
-        result['date_due'] = row[5]
-        result['late_fee'] = row[6]
-        result['total'] = row[7]
-        result['contract_name'] = row[8]
+        result['late_fee'] = row[5]
+        result['total_paid'] = row[6]
+        result['contract_name'] = row[7]
+        result['contract_price'] = row[8]
         return result
 
-    def postInvoice(self, landlord_id, tenant_id, date_due, late_fee, total):
-        if not landlord_id and not tenant_id and not date_due and not late_fee and not total:
+    def postInvoice(self, contract_id, date_due, late_fee):
+        if not contract_id and not date_due and not late_fee:
             return jsonify("Missing Arguments"), 404
         dao = InvoicesDAO()
-        result = dao.postInvoice(
-            landlord_id, tenant_id, date_due, late_fee, total)
+        result = dao.postInvoice(contract_id, date_due, late_fee)
         return jsonify(result)
 
     def getInvoicesPaidLandlord(self, landlord_id):
@@ -85,4 +84,11 @@ class InvoicesHandler:
             return jsonify("Missing Arguments"), 404
         dao = InvoicesDAO()
         result = dao.getInvoicesTotalTenant(tenant_id)
+        return jsonify(result)
+
+    def payInvoice(self, invoice_id, total_paid):
+        if not invoice_id and not total_paid:
+            return jsonify("Missing Arguments"), 404
+        dao = InvoicesDAO()
+        result = dao.payInvoice(invoice_id, total_paid)
         return jsonify(result)

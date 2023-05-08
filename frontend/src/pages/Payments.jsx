@@ -16,6 +16,7 @@ import {
 	getProperties,
 } from "../api/fetcher";
 import AthMovil from "../components/AthMovil";
+import { CreateInvoiceView } from "../components/Modal";
 import Rating from "../components/Rating";
 import useExternalScripts from "../hooks/useExternalScript";
 import useLocalStorage from "../hooks/useLocalStorage";
@@ -53,6 +54,9 @@ function LandlordPayments({ user }) {
 		setPastPayments(await getInvoicesPaidLandlord(user.landlord_id));
 	};
 
+	// Modal handling
+	const [openView, setOpenView] = useState(false);
+
 	// On component mount
 	useEffect(() => {
 		fetchTotalRevenue();
@@ -68,7 +72,9 @@ function LandlordPayments({ user }) {
 			<Row>
 				Total Revenue
 				<div className="total">${!totalRevenue ? 0 : totalRevenue}</div>
-				<Button className="invoice-btn">Create Invoice +</Button>
+				<Button className="invoice-btn" onClick={() => setOpenView(true)}>
+					Create Invoice +
+				</Button>
 			</Row>
 			<Accordion flush alwaysOpen>
 				<Accordion.Item eventKey="0">
@@ -93,13 +99,13 @@ function LandlordPayments({ user }) {
 											<tr key={index}>
 												<td>{invoice.contract_name}</td>
 												<td>
-													{new Date(invoice.date_received).toLocaleDateString()}
+													{new Date(invoice.date_issued).toLocaleDateString()}
 												</td>
 												<td>
 													{new Date(invoice.date_due).toLocaleDateString()}
 												</td>
 												<td>${invoice.late_fee}</td>
-												<td>${invoice.total}</td>
+												<td>${invoice.contract_price}</td>
 											</tr>
 										);
 									})}
@@ -153,6 +159,7 @@ function LandlordPayments({ user }) {
 					</Accordion.Body>
 				</Accordion.Item>
 			</Accordion>
+			<CreateInvoiceView open={openView} setOpen={setOpenView} user={user} />
 		</>
 	);
 }
@@ -209,7 +216,7 @@ function TenantPayments({ user }) {
 										<th>Contract</th>
 										<th>Issued</th>
 										<th>Due</th>
-										<th>Fee</th>
+										<th>Late Fee</th>
 										<th>Total</th>
 									</tr>
 								</thead>
@@ -219,13 +226,13 @@ function TenantPayments({ user }) {
 											<tr key={index}>
 												<td>{invoice.contract_name}</td>
 												<td>
-													{new Date(invoice.date_received).toLocaleDateString()}
+													{new Date(invoice.date_issued).toLocaleDateString()}
 												</td>
 												<td>
 													{new Date(invoice.date_due).toLocaleDateString()}
 												</td>
-												<td>{invoice.late_fee}</td>
-												<td>{invoice.total}</td>
+												<td>${invoice.late_fee}</td>
+												<td>${invoice.contract_price}</td>
 											</tr>
 										);
 									})}
@@ -246,9 +253,9 @@ function TenantPayments({ user }) {
 										<th>Contract</th>
 										<th>Issued</th>
 										<th>Due</th>
-										<th>Fee</th>
-										<th>Total</th>
 										<th>Paid</th>
+										<th>Late Fee</th>
+										<th>Total</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -257,16 +264,21 @@ function TenantPayments({ user }) {
 											<tr key={index}>
 												<td>{invoice.contract_name}</td>
 												<td>
-													{new Date(invoice.date_received).toLocaleDateString()}
+													{new Date(invoice.date_issued).toLocaleDateString()}
 												</td>
 												<td>
 													{new Date(invoice.date_due).toLocaleDateString()}
 												</td>
-												<td>{invoice.late_fee}</td>
-												<td>{invoice.total}</td>
 												<td>
 													{new Date(invoice.date_paid).toLocaleDateString()}
 												</td>
+												<td>
+													$
+													{invoice.date_due >= invoice.date_paid
+														? 0
+														: invoice.late_fee}
+												</td>
+												<td>${invoice.total_paid}</td>
 											</tr>
 										);
 									})}

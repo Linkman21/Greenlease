@@ -91,7 +91,7 @@ export function UserNotFound({ open, setOpen }) {
 
 export function ListingView({ open, setOpen, listing }) {
 	const [user, setUser] = useLocalStorage("user", null);
-	const [loading, setLoading] = useState(null);
+	const [loading, setLoading] = useState(false);
 	const handleRemove = async () => {
 		setLoading(<Spinner />);
 		await deleteListing(listing.listing_id);
@@ -99,7 +99,7 @@ export function ListingView({ open, setOpen, listing }) {
 		window.location.reload(false);
 	};
 	const handleRequest = async () => {
-		setLoading(<Spinner />);
+		setLoading(true);
 		await requestContract(
 			listing.landlord_id,
 			user.tenant_id,
@@ -112,7 +112,7 @@ export function ListingView({ open, setOpen, listing }) {
 	// Handle closing
 	useEffect(() => {
 		if (open) return;
-		setLoading(null);
+		setLoading(false);
 		setOpen(false);
 	}, [open]);
 
@@ -170,19 +170,21 @@ export function ListingView({ open, setOpen, listing }) {
 					)
 				) : (
 					<Button className="add-btn" type="button" onClick={handleRequest}>
-						Request
+						{loading ? <Spinner className="loading-btn" /> : "Request"}
 					</Button>
 				)}
 			</Modal.Footer>
-			{loading}
 		</Modal>
 	);
 }
 
 export function PropertyView({ open, setOpen, property }) {
+	const [loading, setLoading] = useState(false);
 	const handleDelete = async () => {
-		console.log("deleting property...");
+		// console.log("deleting property...");
+		setLoading(true);
 		await deleteProperty(property.property_id);
+		setLoading(false);
 		setOpen(false);
 		window.location.reload(false);
 	};
@@ -234,7 +236,7 @@ export function PropertyView({ open, setOpen, property }) {
 					Close
 				</Button>
 				<Button className="delete-btn" type="submit" onClick={handleDelete}>
-					Delete
+					{loading ? <Spinner className="loading-btn" /> : "Delete"}
 				</Button>
 			</Modal.Footer>
 		</Modal>
@@ -272,7 +274,7 @@ export function AddPropertyView({ open, setOpen }) {
 
 	// Handle add property
 	const [user, setUser] = useLocalStorage("user", null);
-	const [loading, setLoading] = useState(null);
+	const [loading, setLoading] = useState(false);
 	const handleAdd = async () => {
 		if (name == "" && address == "" && bathrooms == 0 && bedrooms == 0) {
 			alert("Error: Missing fields.");
@@ -292,7 +294,7 @@ export function AddPropertyView({ open, setOpen }) {
 			images: images,
 		});
 
-		setLoading(<Spinner />);
+		setLoading(true);
 		await addProperty(
 			user.landlord_id,
 			name,
@@ -313,7 +315,7 @@ export function AddPropertyView({ open, setOpen }) {
 		setBedrooms("");
 		setBathrooms("");
 		setImages([]);
-		setLoading(null);
+		setLoading(false);
 		setOpen(false);
 	}, [open]);
 
@@ -422,10 +424,9 @@ export function AddPropertyView({ open, setOpen }) {
 					type="button"
 					onClick={handleAdd}
 				>
-					Add
+					{loading ? <Spinner className="loading-btn" /> : "Add"}
 				</Button>
 			</Modal.Footer>
-			{loading}
 		</Modal>
 	);
 }
@@ -439,7 +440,7 @@ export function AddListingView({ properties, open, setOpen }) {
 	const [price, setPrice] = useState(null);
 
 	// Handle add listing
-	const [loading, setLoading] = useState(null);
+	const [loading, setLoading] = useState(false);
 	const handleCreate = async () => {
 		if (
 			property_id == "" &&
@@ -457,16 +458,16 @@ export function AddListingView({ properties, open, setOpen }) {
 			return;
 		}
 
-		console.log({
-			landlord_id: user.landlord_id,
-			property_id: property_id,
-			title: title,
-			description: description,
-			pet_flag: pet_flag,
-			price: price,
-		});
+		// console.log({
+		// 	landlord_id: user.landlord_id,
+		// 	property_id: property_id,
+		// 	title: title,
+		// 	description: description,
+		// 	pet_flag: pet_flag,
+		// 	price: price,
+		// });
 
-		setLoading(<Spinner />);
+		setLoading(true);
 		await addListing(
 			user.landlord_id,
 			property_id,
@@ -487,7 +488,7 @@ export function AddListingView({ properties, open, setOpen }) {
 		setDescription("");
 		setPet_flag(null);
 		setPrice(null);
-		setLoading(null);
+		setLoading(false);
 		setOpen(false);
 	}, [open]);
 
@@ -597,15 +598,15 @@ export function AddListingView({ properties, open, setOpen }) {
 					type="button"
 					onClick={handleCreate}
 				>
-					Create
+					{loading ? <Spinner className="loading-btn" /> : "Create"}
 				</Button>
 			</Modal.Footer>
-			{loading}
 		</Modal>
 	);
 }
 
 export function PendingContractView({ open, setOpen, contract }) {
+	const [loading, setLoading] = useState(false);
 	// Dates
 	const [start, setStart] = useState(null);
 	const [end, setEnd] = useState(null);
@@ -621,13 +622,14 @@ export function PendingContractView({ open, setOpen, contract }) {
 		};
 	};
 
-	const [loading, setLoading] = useState(null);
+	const [price, setPrice] = useState(null);
+
 	const handleAccept = async () => {
 		if (!start || !end || !pdf) {
 			alert("Missing fields");
 		}
-		setLoading(<Spinner />);
-		await signContract(contract.contract_id, start, end, pdf);
+		setLoading(true);
+		await signContract(contract.contract_id, start, end, pdf, price);
 		setOpen(false);
 		window.location.reload(false);
 	};
@@ -638,7 +640,8 @@ export function PendingContractView({ open, setOpen, contract }) {
 		setStart(null);
 		setEnd(null);
 		setPdf(null);
-		setLoading(null);
+		setPrice(null);
+		setLoading(false);
 		setOpen(false);
 	}, [open]);
 
@@ -685,6 +688,18 @@ export function PendingContractView({ open, setOpen, contract }) {
 						/>
 					</Form.Group>
 					<Form.Group className="form-group">
+						<Form.Label>Price</Form.Label>
+						<InputGroup style={{ width: "15rem" }}>
+							<InputGroup.Text>$</InputGroup.Text>
+							<Form.Control
+								onChange={(e) => setPrice(e.target.value)}
+								type="number"
+							/>
+							<InputGroup.Text>.00</InputGroup.Text>
+						</InputGroup>
+						<Form.Text>How much does will the tenant pay per month?</Form.Text>
+					</Form.Group>
+					<Form.Group className="form-group">
 						<Form.Label>Contract PDF</Form.Label>
 						<label className="pdf-input">
 							<input
@@ -713,10 +728,9 @@ export function PendingContractView({ open, setOpen, contract }) {
 					Close
 				</Button>
 				<Button className="accept-btn" type="submit" onClick={handleAccept}>
-					Accept
+					{loading ? <Spinner className="loading-btn" /> : "Accept"}
 				</Button>
 			</Modal.Footer>
-			{loading}
 		</Modal>
 	);
 }
@@ -726,7 +740,7 @@ export function RateContractView({ open, setOpen, contract }) {
 	const [user, setUser] = useLocalStorage("user", null);
 
 	// Loading flag
-	const [loading, setLoading] = useState(null);
+	const [loading, setLoading] = useState(false);
 
 	// Ratings
 	const [landlordRating, setLandlordRating] = useState(null);
@@ -754,7 +768,7 @@ export function RateContractView({ open, setOpen, contract }) {
 		);
 	};
 	const handleRate = async () => {
-		setLoading(<Spinner />);
+		setLoading(true);
 		if (user.type == "landlord") {
 			await handleLandlordRating();
 		} else {
@@ -770,7 +784,7 @@ export function RateContractView({ open, setOpen, contract }) {
 		setLandlordRating(null);
 		setTenantRating(null);
 		setPropertyRating(null);
-		setLoading(null);
+		setLoading(false);
 		setOpen(false);
 	}, [open]);
 
@@ -845,52 +859,49 @@ export function RateContractView({ open, setOpen, contract }) {
 					Close
 				</Button>
 				<Button className="submit-btn" type="submit" onClick={handleRate}>
-					Submit
+					{loading ? <Spinner className="loading-btn" /> : "Submit"}
 				</Button>
 			</Modal.Footer>
-			{loading}
 		</Modal>
 	);
 }
 
 export function CreateInvoiceView({ user, open, setOpen }) {
+	const [loading, setLoading] = useState(true);
+
 	// Contract information
 	const [contracts, setContracts] = useState(null);
 	const handleContracts = async () => {
-		setContracts(getActiveContracts(user.landlord_id));
+		setContracts(await getActiveContracts(user.landlord_id));
+		setLoading(false);
 	};
 
 	// Invoice parameters
 	const [selectedContract, setSelectedContract] = useState(null);
 	const [due, setDue] = useState(null);
 	const [fee, setFee] = useState(null);
-	const [total, setTotal] = useState(null);
 
 	// Handle add listing
-	const [loading, setLoading] = useState(null);
 	const handleCreate = async () => {
-		if (!due || !fee || !total) {
-			alert("Error: Missing fields.");
-			return;
-		}
-		console.log({
-			contract: selectedContract,
-			due: due,
-			fee: fee,
-			total: total,
-		});
+		// if (!due || !fee || !selectedContract) {
+		// 	alert("Error: Missing fields.");
+		// 	return;
+		// }
+		// console.log({
+		// 	contract: selectedContract,
+		// 	due: due,
+		// 	fee: fee,
+		// });
 
-		setLoading(<Spinner />);
-		await postInvoice(
-			selectedContract.landlord_id,
-			selectedContract.tenant_id,
-			due,
-			fee,
-			total
-		);
-		setOpen(false);
-		window.location.reload(false);
+		setLoading(true);
+		// await postInvoice(selectedContract.contract_id, due, fee);
+		// setOpen(false);
+		// window.location.reload(false);
 	};
+
+	useEffect(() => {
+		handleContracts();
+	}, []);
 
 	// Handle closing
 	useEffect(() => {
@@ -898,10 +909,11 @@ export function CreateInvoiceView({ user, open, setOpen }) {
 		setSelectedContract(null);
 		setDue(null);
 		setFee(null);
-		setTotal(null);
-		setLoading(null);
+		setLoading(false);
 		setOpen(false);
 	}, [open]);
+
+	if (!open) return;
 
 	if (!contracts) return <Spinner />;
 
@@ -923,74 +935,41 @@ export function CreateInvoiceView({ user, open, setOpen }) {
 					<Form.Group className="form-group">
 						<Form.Label>Contract</Form.Label>
 						<Form.Select
-							onChange={(e) => setContract(e.target.value)}
+							onChange={(e) => setSelectedContract(contracts[e.target.value])}
 							style={{ display: "block", width: "20rem" }}
 						>
 							<option value={null}></option>
-							{properties.map((p, i) => {
+							{contracts.map((c, i) => {
 								return (
-									<option key={i} value={p.property_id}>
-										{p.name}
+									<option key={i} value={i}>
+										{c.name}
 									</option>
 								);
 							})}
 						</Form.Select>
-						<Form.Text>Select the property you want to list.</Form.Text>
+						<Form.Text>Select the contract you want to invoice.</Form.Text>
 					</Form.Group>
 					<Form.Group className="form-group">
-						<Form.Label>Title</Form.Label>
+						<Form.Label>Due</Form.Label>
 						<Form.Control
-							onChange={(e) => setTitle(e.target.value)}
-							type="text"
+							onChange={(e) => setDue(e.target.value)}
+							type="date"
+							placeholder="mm-dd-yyyy"
+							style={{ width: "15rem" }}
 						/>
-						<Form.Text>
-							Give your listing a catchy title. e.g. Beautiful Apartment Near
-							University
-						</Form.Text>
+						<Form.Text>Payment due date.</Form.Text>
 					</Form.Group>
 					<Form.Group className="form-group">
-						<Form.Label>Description</Form.Label>
-						<Form.Control
-							onChange={(e) => setDescription(e.target.value)}
-							as="textarea"
-							rows={3}
-							type="text"
-						/>
-						<Form.Text>
-							Feel free to share as much details as possible.
-						</Form.Text>
-					</Form.Group>
-					<Form.Group className="form-group">
-						<Form.Label>Pets</Form.Label>
-						<Form.Check
-							onChange={(e) => setPet_flag(e.target.value)}
-							value={true}
-							inline
-							label="Yes"
-							name="pets"
-							type="radio"
-						/>
-						<Form.Check
-							onChange={(e) => setPet_flag(e.target.value)}
-							inline
-							value={false}
-							label="No"
-							name="pets"
-							type="radio"
-						/>
-						<Form.Text>Are pets allowed?</Form.Text>
-					</Form.Group>
-					<Form.Group className="form-group">
-						<Form.Label>Price per month</Form.Label>
+						<Form.Label>Late Fee</Form.Label>
 						<InputGroup style={{ width: "15rem" }}>
 							<InputGroup.Text>$</InputGroup.Text>
 							<Form.Control
-								onChange={(e) => setPrice(e.target.value)}
+								onChange={(e) => setFee(e.target.value)}
 								type="number"
 							/>
 							<InputGroup.Text>.00</InputGroup.Text>
 						</InputGroup>
-						<Form.Text>How much does it cost per month?</Form.Text>
+						<Form.Text>What is the fee for late payments?</Form.Text>
 					</Form.Group>
 				</Form>
 			</Modal.Body>
@@ -1009,10 +988,9 @@ export function CreateInvoiceView({ user, open, setOpen }) {
 					type="button"
 					onClick={handleCreate}
 				>
-					Create
+					{loading ? <Spinner className="loading-btn" /> : "Create"}
 				</Button>
 			</Modal.Footer>
-			{loading}
 		</Modal>
 	);
 }
