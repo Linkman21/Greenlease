@@ -126,7 +126,7 @@ function LandlordPayments({ user }) {
 										<th>Contract</th>
 										<th>Issued</th>
 										<th>Paid</th>
-										<th>Fee</th>
+										<th>Late Fee</th>
 										<th>Total</th>
 									</tr>
 								</thead>
@@ -140,16 +140,13 @@ function LandlordPayments({ user }) {
 												<td>
 													{new Date(invoice.date_issued).toLocaleDateString()}
 												</td>
-												<td>
+												<td
+													style={late ? { color: "red" } : { color: "green" }}
+												>
 													{new Date(invoice.date_paid).toLocaleDateString()}
 												</td>
-												<td>${late ? 0 : invoice.late_fee}</td>
-												<td>
-													$
-													{late
-														? invoice.total + invoice.late_fee
-														: invoice.total_paid}
-												</td>
+												<td>${late ? invoice.late_fee : 0}</td>
+												<td>${invoice.total_paid}</td>
 											</tr>
 										);
 									})}
@@ -217,7 +214,7 @@ function TenantPayments({ user }) {
 										<th>Issued</th>
 										<th>Due</th>
 										<th>Late Fee</th>
-										<th>Total</th>
+										<th>Amount</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -260,6 +257,8 @@ function TenantPayments({ user }) {
 								</thead>
 								<tbody>
 									{pastPayments.map((invoice, index) => {
+										var late =
+											new Date(invoice.date_paid) > new Date(invoice.date_due);
 										return (
 											<tr key={index}>
 												<td>{invoice.contract_name}</td>
@@ -269,15 +268,12 @@ function TenantPayments({ user }) {
 												<td>
 													{new Date(invoice.date_due).toLocaleDateString()}
 												</td>
-												<td>
+												<td
+													style={late ? { color: "red" } : { color: "green" }}
+												>
 													{new Date(invoice.date_paid).toLocaleDateString()}
 												</td>
-												<td>
-													$
-													{invoice.date_due >= invoice.date_paid
-														? 0
-														: invoice.late_fee}
-												</td>
+												<td>${late ? invoice.late_fee : 0}</td>
 												<td>${invoice.total_paid}</td>
 											</tr>
 										);

@@ -25,11 +25,6 @@ export default function Listings() {
 		fetchFilteredListings();
 		console.log("Searching: ", search);
 	};
-	const handleKeyDown = (event) => {
-		if (event.key === "Enter") {
-			handleSearch();
-		}
-	};
 
 	// Bedrooms
 	const [bedrooms, setBedrooms] = useState(null);
@@ -90,14 +85,19 @@ export default function Listings() {
 	return (
 		<>
 			<Row>
-				<Form className="search-bar">
+				<Form
+					className="search-bar"
+					onSubmit={(e) => {
+						e.preventDefault();
+						handleSearch();
+					}}
+				>
 					<Form.Control
-						type="search"
+						type="text"
 						placeholder="Search"
 						aria-label="Search"
 						value={search}
 						onChange={(e) => setSearch(e.target.value)}
-						onKeyDown={(e) => handleKeyDown(e)}
 					/>
 					<Button onClick={handleSearch}>Search</Button>
 				</Form>

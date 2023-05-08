@@ -614,6 +614,10 @@ body {
 	background-color: var(--light-grey);
 }
 
+.payments .accordion-body {
+	overflow: scroll;
+}
+
 /* ========================= Cards Styles ========================= */
 
 .card {
