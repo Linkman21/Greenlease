@@ -814,4 +814,18 @@ body {
 	.row.row-cols-auto {
 		justify-content: center;
 	}
+
+	.listing-modal img {
+		display: block;
+		margin: auto;
+		height: 15rem;
+		max-width: 20rem;
+	}
+
+	.listing-modal .map {
+		display: block;
+		margin: auto;
+		width: 15rem;
+		height: 20rem;
+	}
 }

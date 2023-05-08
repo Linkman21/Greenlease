@@ -90,7 +90,7 @@ export function ListingCards({ listings, filtered }) {
 						>
 							<Card.Img variant="top" src={listing.pictures[0]} />
 							<Card.Body>
-								<Card.Title>{listing.name}</Card.Title>
+								<Card.Title>{listing.title}</Card.Title>
 								<Card.Text>${listing.price}/month</Card.Text>
 								<Rating
 									value={parseInt(listing.property_rating) / 20}
