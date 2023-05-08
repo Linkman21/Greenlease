@@ -39,7 +39,7 @@ class PropertiesHandler:
 
     # POST
     def addProperty(self, landlord_id, name, address, bedrooms, bathrooms, pictures):
-        if landlord_id and name and address and bedrooms and bathrooms and pictures:
+        if not landlord_id and not name and not address and not bedrooms and not bathrooms and not pictures:
             return jsonify("Missing Arguments"), 404
         dao = PropertiesDAO()
         result = dao.addProperty(

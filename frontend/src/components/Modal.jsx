@@ -269,10 +269,10 @@ export function PropertyView({ open, setOpen, property }) {
 
 export function AddPropertyView({ open, setOpen }) {
 	// Property information
-	const [name, setName] = useState("");
-	const [address, setAddress] = useState("");
-	const [bedrooms, setBedrooms] = useState(0);
-	const [bathrooms, setBathrooms] = useState(0);
+	const [name, setName] = useState(null);
+	const [address, setAddress] = useState(null);
+	const [bedrooms, setBedrooms] = useState(null);
+	const [bathrooms, setBathrooms] = useState(null);
 
 	// Property images
 	const [images, setImages] = useState([]);
@@ -334,10 +334,10 @@ export function AddPropertyView({ open, setOpen }) {
 	// Handle closing
 	useEffect(() => {
 		if (open) return;
-		setName("");
-		setAddress("");
-		setBedrooms("");
-		setBathrooms("");
+		setName(null);
+		setAddress(null);
+		setBedrooms(null);
+		setBathrooms(null);
 		setImages([]);
 		setLoading(false);
 		setOpen(false);
@@ -362,7 +362,7 @@ export function AddPropertyView({ open, setOpen }) {
 						<Form.Label>Property Name</Form.Label>
 						<Form.Control
 							type="name"
-							value={name}
+							// value={name}
 							onChange={(e) => setName(e.target.value)}
 						/>
 						<Form.Text>
@@ -373,7 +373,7 @@ export function AddPropertyView({ open, setOpen }) {
 						<Form.Label>Property Address</Form.Label>
 						<Form.Control
 							type="address"
-							value={address}
+							// value={address}
 							onChange={(e) => setAddress(e.target.value)}
 						/>
 						<Form.Text>Where is your apartment located?</Form.Text>
@@ -598,8 +598,15 @@ export function AddListingView({ properties, open, setOpen }) {
 						<InputGroup style={{ width: "15rem" }}>
 							<InputGroup.Text>$</InputGroup.Text>
 							<Form.Control
-								onChange={(e) => setPrice(e.target.value)}
-								type="number"
+								type="text"
+								value={price}
+								onChange={(e) =>
+									setPrice(
+										e.target.value
+											.replace(/[^0-9.]/g, "")
+											.replace(/(\..*)\./g, "$1")
+									)
+								}
 							/>
 							<InputGroup.Text>.00</InputGroup.Text>
 						</InputGroup>
@@ -725,8 +732,15 @@ export function PendingContractView({ open, setOpen, contract }) {
 						<InputGroup style={{ width: "15rem" }}>
 							<InputGroup.Text>$</InputGroup.Text>
 							<Form.Control
-								onChange={(e) => setPrice(e.target.value)}
-								type="number"
+								type="text"
+								value={price}
+								onChange={(e) =>
+									setPrice(
+										e.target.value
+											.replace(/[^0-9.]/g, "")
+											.replace(/(\..*)\./g, "$1")
+									)
+								}
 							/>
 							<InputGroup.Text>.00</InputGroup.Text>
 						</InputGroup>

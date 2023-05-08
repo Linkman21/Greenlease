@@ -192,8 +192,15 @@ export default function Landing() {
 										<Form.Label>Phone</Form.Label>
 										<Form.Control
 											type="tel"
+											pattern="[0-9]"
 											value={phone}
-											onChange={(e) => setPhone(e.target.value)}
+											onChange={(e) =>
+												setPhone(
+													e.target.value
+														.replace(/[^0-9.]/g, "")
+														.replace(/(\..*)\./g, "$1")
+												)
+											}
 										/>
 									</Form.Group>
 								</Col>

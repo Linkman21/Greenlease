@@ -64,7 +64,7 @@ def properties_endpoint():
     content_type = request.headers.get('Content-Type')
     pictures = []
     if (content_type == 'application/json'):
-        pictures = json.loads(request.data)
+        pictures = request.get_json()
     if request.method == "GET":
         return PropertiesHandler().getProperties(landlord_id)
     elif request.method == "POST":
