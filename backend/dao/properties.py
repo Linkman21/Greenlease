@@ -18,7 +18,7 @@ class PropertiesDAO:
         cursor.execute(query)
         result = []
         for row in cursor:
-            # print(row)
+            print(row)
             result.append(row)
         cursor.close()
         return result
@@ -29,7 +29,7 @@ class PropertiesDAO:
         cursor.execute(query, (landlord_id,))
         result = []
         for row in cursor:
-            # print(row)
+            print(row)
             result.append(row)
         cursor.close()
         return result

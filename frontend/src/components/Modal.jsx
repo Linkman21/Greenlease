@@ -1,6 +1,7 @@
 import PersonIcon from "@mui/icons-material/Person";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import { Rating } from "@mui/material";
+import imageCompression from "browser-image-compression";
 import { useEffect, useState } from "react";
 import Carousel from "react-bootstrap/Carousel";
 import Form from "react-bootstrap/Form";
@@ -276,17 +277,36 @@ export function AddPropertyView({ open, setOpen }) {
 
 	// Property images
 	const [images, setImages] = useState([]);
+	const [loadingCompression, setLoadingCompression] = useState(false);
 	const handleFiles = async (files) => {
 		// Check for files
 		if (!files || files.length == 0) return;
 
 		// Convert each file into base64
 		for (let i = 0; i < files.length; i++) {
-			let fileReader = new FileReader();
-			fileReader.readAsDataURL(files[i]);
-			fileReader.onload = () => {
-				setImages((prev) => [...prev, fileReader.result]);
+			setLoadingCompression(true);
+			const maxSizeMB = 0.5;
+			const imageFile = files[i];
+			const options = {
+				maxSizeMB: maxSizeMB,
+				maxWidthOrHeight: 1920,
 			};
+			try {
+				const compressedFile =
+					imageFile.size < maxSizeMB * 1000000
+						? imageFile
+						: await imageCompression(imageFile, options);
+				console.log(compressedFile.size / 1024 / 1024);
+
+				let fileReader = new FileReader();
+				fileReader.readAsDataURL(compressedFile);
+				fileReader.onload = () => {
+					setImages((prev) => [...prev, fileReader.result]);
+				};
+			} catch (error) {
+				console.log(error);
+			}
+			setLoadingCompression(false);
 		}
 	};
 
@@ -339,6 +359,7 @@ export function AddPropertyView({ open, setOpen }) {
 		setBedrooms(null);
 		setBathrooms(null);
 		setImages([]);
+		setLoadingCompression(false);
 		setLoading(false);
 		setOpen(false);
 	}, [open]);
@@ -419,7 +440,9 @@ export function AddPropertyView({ open, setOpen }) {
 							<span>Upload Images</span>
 						</label>
 						<Form.Text>Upload images of your property</Form.Text>
-						{images.length == 0 ? null : (
+						{loadingCompression ? (
+							<Spinner className="loading-compression" />
+						) : images.length == 0 ? null : (
 							<Carousel variant="dark">
 								{images.map((value, index) => {
 									return (
