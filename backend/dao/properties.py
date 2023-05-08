@@ -13,7 +13,7 @@ class PropertiesDAO:
 
     # SELECT
     def getAllProperties(self):
-        query = "select property_id, landlord_id, name, address, bedrooms, bathrooms, pictures from properties;"
+        query = "select property_id, landlord_id, name, address, bedrooms, bathrooms, pictures, case when exists (select 1 from property_ratings where property_ratings.property_id=properties.property_id) then (select avg(rating) from property_ratings where property_ratings.property_id=properties.property_id) else 0 end property_rating from properties;"
         cursor = self.conn.cursor()
         cursor.execute(query)
         result = []
@@ -24,7 +24,7 @@ class PropertiesDAO:
         return result
 
     def getProperties(self, landlord_id):
-        query = "select property_id, landlord_id, name, address, bedrooms, bathrooms, pictures from properties where landlord_id = %s;"
+        query = "select property_id, landlord_id, name, address, bedrooms, bathrooms, pictures, case when exists (select 1 from property_ratings where property_ratings.property_id=properties.property_id) then (select avg(rating) from property_ratings where property_ratings.property_id=properties.property_id) else 0 end property_rating from properties where landlord_id = %s;"
         cursor = self.conn.cursor()
         cursor.execute(query, (landlord_id,))
         result = []
@@ -40,17 +40,16 @@ class PropertiesDAO:
         cursor = self.conn.cursor()
         cursor.execute(query, (landlord_id, name, address,
                        bedrooms, bathrooms, pictures))
-        property_id = cursor.fetchone()[0]
         self.conn.commit()
         cursor.close()
-        return property_id
-    
+        return "POST Success"
+
     # DELETE
     def deleteProperty(self, property_id):
         query = "delete from listings where property_id=%s; delete from property_ratings where property_id=%s; delete from contracts where property_id=%s; delete from properties where property_id=%s returning *;"
         cursor = self.conn.cursor()
-        cursor.execute(query, (property_id, property_id, property_id, property_id,))
-        result = cursor.fetchall()
+        cursor.execute(query, (property_id, property_id,
+                       property_id, property_id,))
         self.conn.commit()
         cursor.close()
-        return result
+        return "DELETE Success"

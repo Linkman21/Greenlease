@@ -8,6 +8,7 @@ import InputGroup from "react-bootstrap/InputGroup";
 import Modal from "react-bootstrap/Modal";
 import Spinner from "react-bootstrap/Spinner";
 import Button from "react-bootstrap/esm/Button";
+import { useNavigate } from "react-router-dom";
 import {
 	addLandlordRating,
 	addListing,
@@ -90,6 +91,7 @@ export function UserNotFound({ open, setOpen }) {
 }
 
 export function ListingView({ open, setOpen, listing }) {
+	const navigate = useNavigate();
 	const [user, setUser] = useLocalStorage("user", null);
 	const [loading, setLoading] = useState(false);
 	const handleRemove = async () => {
@@ -100,6 +102,7 @@ export function ListingView({ open, setOpen, listing }) {
 	};
 	const handleRequest = async () => {
 		setLoading(true);
+		if (!user) return navigate("/authentication");
 		await requestContract(
 			listing.landlord_id,
 			user.tenant_id,
@@ -147,11 +150,22 @@ export function ListingView({ open, setOpen, listing }) {
 						</Carousel.Item>
 					</Carousel>
 				)}
-				<div className="contact">
-					<PersonIcon />
-					{listing.landlord_first_name} {listing.landlord_last_name}
-					<br />
-					{listing.landlord_phone}
+				<div className="landlord-details">
+					<div className="info">
+						<PersonIcon />
+						<Rating value={parseInt(listing.landlord_rating) / 20} readOnly />
+					</div>
+					<div className="contact">
+						{listing.landlord_first_name} {listing.landlord_last_name}
+						<br />
+						{`(${listing.landlord_phone.substr(
+							0,
+							3
+						)}) ${listing.landlord_phone.substr(
+							3,
+							3
+						)}-${listing.landlord_phone.substr(6, 4)}`}
+					</div>
 				</div>
 			</Modal.Body>
 			<Modal.Footer>
@@ -162,7 +176,11 @@ export function ListingView({ open, setOpen, listing }) {
 				>
 					Close
 				</Button>
-				{user.type == "landlord" ? (
+				{!user ? (
+					<Button className="add-btn" type="button" onClick={handleRequest}>
+						{loading ? <Spinner className="loading-btn" /> : "Request"}
+					</Button>
+				) : user.type == "landlord" ? (
 					user.landlord_id != listing.landlord_id ? null : (
 						<Button className="delete-btn" type="button" onClick={handleRemove}>
 							{loading ? <Spinner className="loading-btn" /> : "Remove"}
@@ -203,18 +221,24 @@ export function PropertyView({ open, setOpen, property }) {
 				</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
-				<p>
-					Address: <br />
-					{property.address}
-				</p>
-				<p>
-					Bedrooms: <br />
-					{property.bedrooms}
-				</p>
-				<p>
-					Bathrooms: <br />
-					{property.bathrooms}
-				</p>
+				<div>
+					<h5>Address</h5>
+					<div className="dynamic-field">{property.address}</div>
+				</div>
+				<div>
+					<h5>Bedrooms </h5>
+					<div className="dynamic-field">{property.bedrooms}</div>
+				</div>
+				<div>
+					<h5>Bathrooms</h5>
+					<div className="dynamic-field">{property.bathrooms}</div>
+				</div>
+				<div>
+					<h5>Rating</h5>
+					<div className="dynamic-field">
+						<Rating value={parseInt(property.rating) / 20} readOnly />
+					</div>
+				</div>
 				{property.pictures.length == 0 ? null : (
 					<Carousel variant="dark">
 						{property.pictures.map((value, index) => {
@@ -286,13 +310,13 @@ export function AddPropertyView({ open, setOpen }) {
 			return;
 		}
 
-		console.log({
-			name: name,
-			address: address,
-			bedrooms: bedrooms,
-			bathrooms: bathrooms,
-			images: images,
-		});
+		// console.log({
+		// 	name: name,
+		// 	address: address,
+		// 	bedrooms: bedrooms,
+		// 	bathrooms: bathrooms,
+		// 	images: images,
+		// });
 
 		setLoading(true);
 		await addProperty(
@@ -660,17 +684,24 @@ export function PendingContractView({ open, setOpen, contract }) {
 				</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
-				<p>
-					Requested by: {contract.tenant_first_name} {contract.tenant_last_name}{" "}
-					(
-					{contract.tenant_phone.substr(0, 3) +
-						"-" +
-						contract.tenant_phone.substr(3, 3) +
-						"-" +
-						contract.tenant_phone.substr(6, 4)}
-					)
-				</p>
 				<Form>
+					<Form.Group className="form-group">
+						<Form.Label>Tenant Details</Form.Label>
+						<Form.Control
+							type="text"
+							placeholder={`${contract.tenant_first_name} ${
+								contract.tenant_last_name
+							} (${contract.tenant_phone.substr(
+								0,
+								3
+							)}) ${contract.tenant_phone.substr(
+								3,
+								3
+							)}-${contract.tenant_phone.substr(6, 4)}`}
+							disabled
+						/>
+						<Form.Text>You can't edit this</Form.Text>
+					</Form.Group>
 					<Form.Group className="form-group">
 						<Form.Label>Start Date</Form.Label>
 						<Form.Control
@@ -678,6 +709,7 @@ export function PendingContractView({ open, setOpen, contract }) {
 							type="date"
 							placeholder="mm-dd-yyyy"
 						/>
+						<Form.Text>When will the contract start?</Form.Text>
 					</Form.Group>
 					<Form.Group className="form-group">
 						<Form.Label>End Date</Form.Label>
@@ -686,6 +718,7 @@ export function PendingContractView({ open, setOpen, contract }) {
 							type="date"
 							placeholder="mm-dd-yyyy"
 						/>
+						<Form.Text>When will the contract end?</Form.Text>
 					</Form.Group>
 					<Form.Group className="form-group">
 						<Form.Label>Price</Form.Label>
@@ -697,7 +730,7 @@ export function PendingContractView({ open, setOpen, contract }) {
 							/>
 							<InputGroup.Text>.00</InputGroup.Text>
 						</InputGroup>
-						<Form.Text>How much does will the tenant pay per month?</Form.Text>
+						<Form.Text>How much will the tenant pay per month?</Form.Text>
 					</Form.Group>
 					<Form.Group className="form-group">
 						<Form.Label>Contract PDF</Form.Label>
@@ -715,7 +748,7 @@ export function PendingContractView({ open, setOpen, contract }) {
 								<PictureAsPdfIcon />
 							</a>
 						)}
-						<Form.Text>Upload a pdf of your contract</Form.Text>
+						<Form.Text>Upload all-party signed contract in pdf</Form.Text>
 					</Form.Group>
 				</Form>
 			</Modal.Body>
@@ -788,11 +821,11 @@ export function RateContractView({ open, setOpen, contract }) {
 		setOpen(false);
 	}, [open]);
 
-	useEffect(() => {
-		console.log("Landlord Rating: ", landlordRating);
-		console.log("Tenant Rating: ", tenantRating);
-		console.log("Property Rating: ", propertyRating);
-	}, [landlordRating, tenantRating, propertyRating]);
+	// useEffect(() => {
+	// 	console.log("Landlord Rating: ", landlordRating);
+	// 	console.log("Tenant Rating: ", tenantRating);
+	// 	console.log("Property Rating: ", propertyRating);
+	// }, [landlordRating, tenantRating, propertyRating]);
 
 	if (!contract) return;
 	return (
@@ -887,11 +920,11 @@ export function CreateInvoiceView({ user, open, setOpen }) {
 			alert("Error: Missing fields.");
 			return;
 		}
-		console.log({
-			contract: selectedContract,
-			due: due,
-			fee: fee,
-		});
+		// console.log({
+		// 	contract: selectedContract,
+		// 	due: due,
+		// 	fee: fee,
+		// });
 
 		setLoading(true);
 		await postInvoice(selectedContract.contract_id, due, fee);

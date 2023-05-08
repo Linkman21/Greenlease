@@ -13,7 +13,7 @@ class ListingsDAO:
 
     # SELECT
     def getAllListings(self):
-        query = "select listing_id, landlord_id, property_id, name, address, bedrooms, bathrooms, pictures, title, description, pet_flag, date_listed, price, first_name, last_name, phone from listings natural join properties natural join landlords natural join users;"
+        query = "select listing_id, landlord_id, property_id, name, address, bedrooms, bathrooms, pictures, title, description, pet_flag, date_listed, price, first_name, last_name, phone, case when exists (select 1 from property_ratings where property_ratings.property_id=properties.property_id) then (select avg(rating) from property_ratings where property_ratings.property_id=properties.property_id) else 0 end property_rating, case when exists (select 1 from landlord_ratings where landlord_ratings.landlord_id=landlords.landlord_id) then (select avg(rating) from landlord_ratings where landlord_ratings.landlord_id=landlords.landlord_id) else 0 end landlord_rating from listings natural join properties natural join landlords natural join users;"
         cursor = self.conn.cursor()
         cursor.execute(query)
         result = []
@@ -24,7 +24,7 @@ class ListingsDAO:
         return result
 
     def getListings(self, landlord_id):
-        query = "select listing_id, landlord_id, property_id, name, address, bedrooms, bathrooms, pictures, title, description, pet_flag, date_listed, price, first_name, last_name, phone from listings natural join properties natural join landlords natural join users where landlord_id=%s;"
+        query = "select listing_id, landlord_id, property_id, name, address, bedrooms, bathrooms, pictures, title, description, pet_flag, date_listed, price, first_name, last_name, phone, case when exists (select 1 from property_ratings where property_ratings.property_id=properties.property_id) then (select avg(rating) from property_ratings where property_ratings.property_id=properties.property_id) else 0 end property_rating, case when exists (select 1 from landlord_ratings where landlord_ratings.landlord_id=landlords.landlord_id) then (select avg(rating) from landlord_ratings where landlord_ratings.landlord_id=landlords.landlord_id) else 0 end landlord_rating from listings natural join properties natural join landlords natural join users where landlord_id=%s;"
         cursor = self.conn.cursor()
         cursor.execute(query, (landlord_id,))
         result = []
@@ -35,15 +35,11 @@ class ListingsDAO:
         return result
 
     def getFilteredListings(self, search, bedrooms, bathrooms, pets):
-        query = "select listing_id, landlord_id, property_id, name, address, bedrooms, bathrooms, pictures, title, description, pet_flag, date_listed, price, first_name, last_name, phone from listings natural join properties natural join landlords natural join users where (title ilike %s or description ilike %s or name ilike %s or address ilike %s or first_name ilike %s or last_name ilike %s) "
-
+        query = "select listing_id, landlord_id, property_id, name, address, bedrooms, bathrooms, pictures, title, description, pet_flag, date_listed, price, first_name, last_name, phone, case when exists (select 1 from property_ratings where property_ratings.property_id=properties.property_id) then (select avg(rating) from property_ratings where property_ratings.property_id=properties.property_id) else 0 end property_rating, case when exists (select 1 from landlord_ratings where landlord_ratings.landlord_id=landlords.landlord_id) then (select avg(rating) from landlord_ratings where landlord_ratings.landlord_id=landlords.landlord_id) else 0 end landlord_rating from listings natural join properties natural join landlords natural join users where (title ilike %s or description ilike %s or name ilike %s or address ilike %s or first_name ilike %s or last_name ilike %s) "
         string = "%"
-
         if search:
             string += search + "%"
-
         args = (string, string, string, string, string, string)
-
         if bedrooms:
             query += "and bedrooms=%s"
             args += (bedrooms,)
@@ -53,12 +49,9 @@ class ListingsDAO:
         if pets:
             query += "and pet_flag=%s"
             args += (pets,)
-
         query += ";"
-
         cursor = self.conn.cursor()
         cursor.execute(query, args,)
-
         result = []
         for row in cursor:
             print(row)
@@ -74,7 +67,7 @@ class ListingsDAO:
                        description, pet_flag, price,))
         self.conn.commit()
         cursor.close()
-        return self.getListings(landlord_id)
+        return "POST Success"
 
     # DELETE
     def deleteListing(self, listing_id):
@@ -83,4 +76,4 @@ class ListingsDAO:
         cursor.execute(query, (listing_id,))
         self.conn.commit()
         cursor.close()
-        return "Success"
+        return "DELETE Success"

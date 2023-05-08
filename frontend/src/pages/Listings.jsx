@@ -37,9 +37,9 @@ export default function Listings() {
 	useEffect(() => {
 		if (!bedrooms) {
 			setBedsButton("off");
-			return;
 		}
-		setBedsButton("on");
+		if (bedrooms == null) return;
+		if (bedrooms) setBedsButton("on");
 		fetchFilteredListings();
 		console.log("Bedrooms: ", bedrooms);
 	}, [bedrooms]);
@@ -50,9 +50,9 @@ export default function Listings() {
 	useEffect(() => {
 		if (!bathrooms) {
 			setBathsButton("off");
-			return;
 		}
-		setBathsButton("on");
+		if (bathrooms == null) return;
+		if (bathrooms) setBathsButton("on");
 		fetchFilteredListings();
 		console.log("Bathrooms: ", bathrooms);
 	}, [bathrooms]);
@@ -63,9 +63,9 @@ export default function Listings() {
 	useEffect(() => {
 		if (!pets) {
 			setPetsButton("off");
-			return;
 		}
-		setPetsButton("on");
+		if (pets == null) return;
+		if (pets) setPetsButton("on");
 		fetchFilteredListings();
 		console.log("Pets: ", pets);
 	}, [pets]);
@@ -104,13 +104,23 @@ export default function Listings() {
 			</Row>
 			<Row>
 				<div className="filters">
-					<Button className={petsButton} onClick={() => setPets(true)}>
+					<Button
+						className={petsButton}
+						onClick={() => setPets((prev) => !prev)}
+					>
 						Pet Friendly
 					</Button>
 					<DropdownButton
 						className={bedsButton}
 						title={!bedrooms ? "Beds" : "Beds:" + bedrooms}
 					>
+						<Dropdown.Item
+							style={{ height: "2rem" }}
+							eventKey="0"
+							onClick={() => setBedrooms(0)}
+						>
+							{""}
+						</Dropdown.Item>
 						<Dropdown.Item eventKey="1" onClick={() => setBedrooms(1)}>
 							1
 						</Dropdown.Item>
@@ -125,6 +135,13 @@ export default function Listings() {
 						className={bathsButton}
 						title={!bathrooms ? "Baths" : "Baths:" + bathrooms}
 					>
+						<Dropdown.Item
+							style={{ height: "2rem" }}
+							eventKey="0"
+							onClick={() => setBathrooms(0)}
+						>
+							{""}
+						</Dropdown.Item>
 						<Dropdown.Item eventKey="1" onClick={() => setBathrooms(1)}>
 							1
 						</Dropdown.Item>

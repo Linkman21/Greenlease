@@ -22,6 +22,8 @@ class ListingsHandler:
         result['landlord_first_name'] = row[13]
         result['landlord_last_name'] = row[14]
         result['landlord_phone'] = row[15]
+        result['property_rating'] = row[16]
+        result['landlord_rating'] = row[17]
         return result
 
     # =================== GET ===================
@@ -36,10 +38,8 @@ class ListingsHandler:
 
     def getListings(self, landlord_id):
         dao = ListingsDAO()
-
         if not landlord_id:
             return jsonify("Missing Arguments"), 404
-
         listings_list = dao.getListings(landlord_id)
         result = []
         for row in listings_list:
@@ -49,10 +49,8 @@ class ListingsHandler:
 
     def getFilteredListings(self, search, bedrooms, bathrooms, pets):
         dao = ListingsDAO()
-
         if not search and not bedrooms and not bathrooms and not pets:
             return self.getAllListings()
-
         listings_list = dao.getFilteredListings(
             search, bedrooms, bathrooms, pets)
         result = []
@@ -64,21 +62,16 @@ class ListingsHandler:
     # =================== POST ===================
     def addListing(self, landlord_id, property_id, title, description, pet_flag, price):
         if landlord_id and property_id and title and description and pet_flag and price:
-            dao = ListingsDAO()
-            listings_list = dao.addListing(
-                landlord_id, property_id, title, description, pet_flag, price)
-            result = []
-            for row in listings_list:
-                dict = self.build_listings_dict(row)
-                result.append(dict)
-            return jsonify(result)
-        return jsonify("Missing Arguments"), 404
+            return jsonify("Missing Arguments"), 404
+        dao = ListingsDAO()
+        result = dao.addListing(
+            landlord_id, property_id, title, description, pet_flag, price)
+        return jsonify(result)
 
     # =================== DELETE ===================
     def deleteListing(self, listing_id):
         if not listing_id:
             return jsonify("Missing Arguments"), 404
-
         dao = ListingsDAO()
         result = dao.deleteListing(listing_id)
         return jsonify(result)

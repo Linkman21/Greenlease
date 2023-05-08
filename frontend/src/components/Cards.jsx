@@ -80,12 +80,46 @@ export function ListingCards({ listings, filtered }) {
 		<>
 			{listings.map((listing, index) => {
 				return (
-					<ListingCard
-						key={index}
-						listing={listing}
-						setCurrentListing={setCurrentListing}
-						setOpenView={setOpenView}
-					/>
+					<Col key={index}>
+						<Card
+							onClick={() => {
+								setCurrentListing(listing);
+								setOpenView(true);
+							}}
+							className="listing-card"
+						>
+							<Card.Img variant="top" src={listing.pictures[0]} />
+							<Card.Body>
+								<Card.Title>{listing.name}</Card.Title>
+								<Card.Text>${listing.price}/month</Card.Text>
+								<Rating
+									value={parseInt(listing.property_rating) / 20}
+									readOnly
+								/>
+								<div className="address-label">
+									<LocationOnOutlinedIcon
+										style={{ color: "#209fa8", margin: "0 0.5rem 0 0.1rem" }}
+									/>
+									{listing.address}
+								</div>
+								<div className="tags">
+									<div className="tag">
+										<BedOutlinedIcon className="icon" /> {listing.bedrooms} bed
+									</div>
+									<div className="tag">
+										<BathtubOutlinedIcon className="icon" />
+										{listing.bathrooms} bath
+									</div>
+									{!listing.pet_flag ? null : (
+										<div className="tag">
+											<PetsOutlinedIcon className="icon" />
+											Pet Friendly
+										</div>
+									)}
+								</div>
+							</Card.Body>
+						</Card>
+					</Col>
 				);
 			})}
 			<ListingView
@@ -94,61 +128,6 @@ export function ListingCards({ listings, filtered }) {
 				listing={currentListing}
 			/>
 		</>
-	);
-}
-
-function ListingCard({ listing, setCurrentListing, setOpenView }) {
-	const [rating, setRating] = useState(0);
-	const handleRating = async () => {
-		setRating((await getPropertyRating(listing.property_id)) / 20);
-	};
-	useEffect(() => {
-		handleRating();
-	}, []);
-
-	// Debug
-	// useEffect(() => {
-	// 	console.log(rating);
-	// }, [rating]);
-
-	return (
-		<Col>
-			<Card
-				onClick={() => {
-					setCurrentListing(listing);
-					setOpenView(true);
-				}}
-				className="listing-card"
-			>
-				<Card.Img variant="top" src={listing.pictures[0]} />
-				<Card.Body>
-					<Card.Title>{listing.name}</Card.Title>
-					<Card.Text>${listing.price}/month</Card.Text>
-					<Rating value={rating} readOnly />
-					<div className="address-label">
-						<LocationOnOutlinedIcon
-							style={{ color: "#209fa8", margin: "0 0.5rem 0 0.1rem" }}
-						/>
-						{listing.address}
-					</div>
-					<div className="tags">
-						<div className="tag">
-							<BedOutlinedIcon className="icon" /> {listing.bedrooms} bed
-						</div>
-						<div className="tag">
-							<BathtubOutlinedIcon className="icon" />
-							{listing.bathrooms} bath
-						</div>
-						{!listing.pet_flag ? null : (
-							<div className="tag">
-								<PetsOutlinedIcon className="icon" />
-								Pet Friendly
-							</div>
-						)}
-					</div>
-				</Card.Body>
-			</Card>
-		</Col>
 	);
 }
 
@@ -221,24 +200,26 @@ export function ActiveContractCards({ activeContracts }) {
 									<ListGroup.Item>
 										Tenant: {contract.tenant_first_name}{" "}
 										{contract.tenant_last_name}
-										<br />(
-										{contract.tenant_phone.substr(0, 3) +
-											"-" +
-											contract.tenant_phone.substr(3, 3) +
-											"-" +
-											contract.tenant_phone.substr(6, 4)}
-										)
+										<br />
+										{`(${contract.tenant_phone.substr(
+											0,
+											3
+										)}) ${contract.tenant_phone.substr(
+											3,
+											3
+										)}-${contract.tenant_phone.substr(6, 4)}`}
 									</ListGroup.Item>
 									<ListGroup.Item>
 										Landlord: {contract.landlord_first_name}{" "}
 										{contract.landlord_last_name}
-										<br />(
-										{contract.landlord_phone.substr(0, 3) +
-											"-" +
-											contract.landlord_phone.substr(3, 3) +
-											"-" +
-											contract.landlord_phone.substr(6, 4)}
-										)
+										<br />
+										{`(${contract.landlord_phone.substr(
+											0,
+											3
+										)}) ${contract.landlord_phone.substr(
+											3,
+											3
+										)}-${contract.landlord_phone.substr(6, 4)}`}
 									</ListGroup.Item>
 								</ListGroup>
 								<Button
@@ -288,14 +269,16 @@ export function PendingContractCards({ pendingContracts }) {
 									Requested by:
 								</Card.Subtitle>
 								<Card.Text>
-									{contract.tenant_first_name} {contract.tenant_last_name}
-									<br />(
-									{contract.tenant_phone.substr(0, 3) +
-										"-" +
-										contract.tenant_phone.substr(3, 3) +
-										"-" +
-										contract.tenant_phone.substr(6, 4)}
-									)
+									Name: {contract.tenant_first_name} {contract.tenant_last_name}
+									<br />
+									Phone:{" "}
+									{`(${contract.tenant_phone.substr(
+										0,
+										3
+									)}) ${contract.tenant_phone.substr(
+										3,
+										3
+									)}-${contract.tenant_phone.substr(6, 4)}`}
 								</Card.Text>
 								<Button
 									className="deny-btn"
@@ -325,8 +308,11 @@ export function PendingContractCards({ pendingContracts }) {
 
 export function CurrentContractCards({ currentContracts }) {
 	const [openView, setOpenView] = useState(false);
+	const [loading, setLoading] = useState(false);
 	const handleRevoke = async (contract_id) => {
+		setLoading(true);
 		await deleteContract(contract_id);
+		setLoading(false);
 		window.location.reload(false);
 	};
 	if (!currentContracts) return;
@@ -350,24 +336,26 @@ export function CurrentContractCards({ currentContracts }) {
 									<ListGroup.Item>
 										Tenant: {contract.tenant_first_name}{" "}
 										{contract.tenant_last_name}
-										<br />(
-										{contract.tenant_phone.substr(0, 3) +
-											"-" +
-											contract.tenant_phone.substr(3, 3) +
-											"-" +
-											contract.tenant_phone.substr(6, 4)}
-										)
+										<br />
+										{`(${contract.tenant_phone.substr(
+											0,
+											3
+										)}) ${contract.tenant_phone.substr(
+											3,
+											3
+										)}-${contract.tenant_phone.substr(6, 4)}`}
 									</ListGroup.Item>
 									<ListGroup.Item>
 										Landlord: {contract.landlord_first_name}{" "}
 										{contract.landlord_last_name}
-										<br />(
-										{contract.landlord_phone.substr(0, 3) +
-											"-" +
-											contract.landlord_phone.substr(3, 3) +
-											"-" +
-											contract.landlord_phone.substr(6, 4)}
-										)
+										<br />
+										{`(${contract.landlord_phone.substr(
+											0,
+											3
+										)}) ${contract.landlord_phone.substr(
+											3,
+											3
+										)}-${contract.landlord_phone.substr(6, 4)}`}
 									</ListGroup.Item>
 								</ListGroup>
 								<Button
@@ -399,22 +387,24 @@ export function CurrentContractCards({ currentContracts }) {
 								</Card.Subtitle>
 								<ListGroup variant="flush">
 									<ListGroup.Item>
-										Landlord: {contract.landlord_first_name}{" "}
+										Name: {contract.landlord_first_name}{" "}
 										{contract.landlord_last_name}
-										<br />(
-										{contract.landlord_phone.substr(0, 3) +
-											"-" +
-											contract.landlord_phone.substr(3, 3) +
-											"-" +
-											contract.landlord_phone.substr(6, 4)}
-										)
+										<br />
+										Phone:{" "}
+										{`(${contract.landlord_phone.substr(
+											0,
+											3
+										)}) ${contract.landlord_phone.substr(
+											3,
+											3
+										)}-${contract.landlord_phone.substr(6, 4)}`}
 									</ListGroup.Item>
 								</ListGroup>
 								<Button
 									className="deny-btn"
 									onClick={() => handleRevoke(contract.contract_id)}
 								>
-									Revoke
+									{loading ? <Spinner className="loading-btn" /> : "Revoke"}
 								</Button>
 							</Card.Body>
 						</Card>

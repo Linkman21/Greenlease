@@ -13,6 +13,7 @@ class PropertiesHandler:
         result['bedrooms'] = row[4]
         result['bathrooms'] = row[5]
         result['pictures'] = row[6]
+        result['rating'] = row[7]
         return result
 
     # GET
@@ -39,19 +40,16 @@ class PropertiesHandler:
     # POST
     def addProperty(self, landlord_id, name, address, bedrooms, bathrooms, pictures):
         if landlord_id and name and address and bedrooms and bathrooms and pictures:
-            dao = PropertiesDAO()
-            property_id = dao.addProperty(
-                landlord_id, name, address, bedrooms, bathrooms, pictures)
-            result = self.build_property_dict(
-                [property_id, landlord_id, name, address, bedrooms, bathrooms, pictures])
-            return jsonify(Property=result), 201
-        return jsonify("Missing Arguments"), 404
+            return jsonify("Missing Arguments"), 404
+        dao = PropertiesDAO()
+        result = dao.addProperty(
+            landlord_id, name, address, bedrooms, bathrooms, pictures)
+        return jsonify(result), 201
 
     # DELETE
     def deleteProperty(self, property_id):
-        dao = PropertiesDAO()
         if not property_id:
             return jsonify("Missing Arguments"), 404
-
+        dao = PropertiesDAO()
         result = dao.deleteProperty(property_id)
         return jsonify(result)
