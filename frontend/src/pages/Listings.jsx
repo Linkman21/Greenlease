@@ -23,7 +23,7 @@ export default function Listings() {
 	const handleSearch = () => {
 		if (search === "") return;
 		fetchFilteredListings();
-		console.log("Searching: ", search);
+		// console.log("Searching: ", search);
 	};
 
 	// Bedrooms
@@ -36,7 +36,7 @@ export default function Listings() {
 		if (bedrooms == null) return;
 		if (bedrooms) setBedsButton("on");
 		fetchFilteredListings();
-		console.log("Bedrooms: ", bedrooms);
+		// console.log("Bedrooms: ", bedrooms);
 	}, [bedrooms]);
 
 	// Bathrooms
@@ -49,7 +49,7 @@ export default function Listings() {
 		if (bathrooms == null) return;
 		if (bathrooms) setBathsButton("on");
 		fetchFilteredListings();
-		console.log("Bathrooms: ", bathrooms);
+		// console.log("Bathrooms: ", bathrooms);
 	}, [bathrooms]);
 
 	// Pets
@@ -62,7 +62,7 @@ export default function Listings() {
 		if (pets == null) return;
 		if (pets) setPetsButton("on");
 		fetchFilteredListings();
-		console.log("Pets: ", pets);
+		// console.log("Pets: ", pets);
 	}, [pets]);
 
 	// Clear filters
@@ -74,7 +74,7 @@ export default function Listings() {
 		setBedrooms(null);
 		setPets(null);
 		fetchListings();
-		console.log("Cleared Filters");
+		// console.log("Cleared Filters");
 	};
 
 	// Fetch listings on render

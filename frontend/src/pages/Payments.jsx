@@ -72,9 +72,11 @@ function LandlordPayments({ user }) {
 			<Row>
 				Total Revenue
 				<div className="total">${!totalRevenue ? 0 : totalRevenue}</div>
-				<Button className="invoice-btn" onClick={() => setOpenView(true)}>
-					Create Invoice +
-				</Button>
+				{pendingPayments.length == 0 ? null : (
+					<Button className="invoice-btn" onClick={() => setOpenView(true)}>
+						Create Invoice +
+					</Button>
+				)}
 			</Row>
 			<Accordion flush alwaysOpen>
 				<Accordion.Item eventKey="0">
@@ -195,10 +197,12 @@ function TenantPayments({ user }) {
 			<Row>
 				Total Pending:
 				<div className="total">${!totalPending ? 0 : totalPending}</div>
-				<AthMovil
-					pendingPayments={pendingPayments}
-					totalPending={totalPending}
-				/>
+				{pendingPayments.length == 0 ? null : (
+					<AthMovil
+						pendingPayments={pendingPayments}
+						totalPending={totalPending}
+					/>
+				)}
 			</Row>
 			<Accordion flush alwaysOpen>
 				<Accordion.Item eventKey="0">

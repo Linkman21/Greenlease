@@ -136,8 +136,6 @@ export async function getListings(landlord_id) {
 }
 
 export async function getFilteredListings(search, beds, baths, pets) {
-	console.log("Filtering listings...");
-
 	if (!search) search = "";
 	if (!beds) beds = "";
 	if (!baths) baths = "";

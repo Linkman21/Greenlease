@@ -285,7 +285,7 @@ export function AddPropertyView({ open, setOpen }) {
 		// Convert each file into base64
 		for (let i = 0; i < files.length; i++) {
 			setLoadingCompression(true);
-			const maxSizeMB = 0.5;
+			const maxSizeMB = 0.2;
 			const imageFile = files[i];
 			const options = {
 				maxSizeMB: maxSizeMB,
@@ -296,7 +296,7 @@ export function AddPropertyView({ open, setOpen }) {
 					imageFile.size < maxSizeMB * 1000000
 						? imageFile
 						: await imageCompression(imageFile, options);
-				console.log(compressedFile.size / 1024 / 1024);
+				// console.log(compressedFile.size / 1024 / 1024);
 
 				let fileReader = new FileReader();
 				fileReader.readAsDataURL(compressedFile);
@@ -437,9 +437,15 @@ export function AddPropertyView({ open, setOpen }) {
 								value={undefined}
 								multiple
 							/>
-							<span>Upload Images</span>
+							<span>
+								{loadingCompression ? "Processing..." : "Upload Images"}
+							</span>
 						</label>
-						<Form.Text>Upload images of your property</Form.Text>
+						<Form.Text>
+							{loadingCompression
+								? "Processing images, please wait"
+								: "Upload images of your property"}
+						</Form.Text>
 						{loadingCompression ? (
 							<Spinner className="loading-compression" />
 						) : images.length == 0 ? null : (
