@@ -37,12 +37,13 @@ export default function Landing() {
 	// Handle user login procedure
 	const [loadingLogin, setLoadingLogin] = useState(false);
 	const handleLogin = async () => {
+		setLoadingLogin(true);
 		// Check for empty fields
 		if (email === "" || password === "" || type === "") {
 			setFieldErrorShow(true);
+			setLoadingLogin(false);
 			return;
 		}
-		setLoadingLogin(true);
 		// Check if user exists
 		const checkUser = await getUser({
 			email: email,
@@ -52,6 +53,7 @@ export default function Landing() {
 
 		if (checkUser === null) {
 			setUserErrorShow(true);
+			setLoadingLogin(false);
 			return;
 		}
 
@@ -63,6 +65,7 @@ export default function Landing() {
 	// Handle user registration procedure
 	const [loadingRegister, setLoadingRegister] = useState(false);
 	const handleRegister = async () => {
+		setLoadingRegister(true);
 		if (
 			newEmail === "" ||
 			newPassword == "" ||
@@ -71,9 +74,9 @@ export default function Landing() {
 			phone == ""
 		) {
 			setFieldErrorShow(true);
+			setLoadingRegister(false);
 			return;
 		}
-		setLoadingRegister(true);
 
 		// Create user
 		const createUser = await addUser({
@@ -86,6 +89,7 @@ export default function Landing() {
 
 		if (createUser === null) {
 			setUserErrorShow(true);
+			setLoadingRegister(false);
 			return;
 		}
 
