@@ -382,7 +382,7 @@ export function AddPropertyView({ open, setOpen }) {
 					<Form.Group className="form-group">
 						<Form.Label>Property Name</Form.Label>
 						<Form.Control
-							type="name"
+							type="text"
 							// value={name}
 							onChange={(e) => setName(e.target.value)}
 						/>
@@ -393,7 +393,7 @@ export function AddPropertyView({ open, setOpen }) {
 					<Form.Group className="form-group">
 						<Form.Label>Property Address</Form.Label>
 						<Form.Control
-							type="address"
+							type="text"
 							// value={address}
 							onChange={(e) => setAddress(e.target.value)}
 						/>

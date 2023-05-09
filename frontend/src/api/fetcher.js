@@ -74,14 +74,15 @@ export async function addProperty(
 	bathrooms,
 	images
 ) {
-	const api = `/api/properties/?landlord_id=${landlord_id}&name=${name}&address=${address}&bedrooms=${bedrooms}&bathrooms=${bathrooms}`;
-
-	console.log(api);
+	const api = `/api/properties/?landlord_id=${landlord_id}&bedrooms=${bedrooms}&bathrooms=${bathrooms}`;
+	// const api =
+	// 	"/api/properties/?landlord_id=1&name=%235 Calle Bosque Mayagüez, PR 00680&address=%235 Calle Bosque Mayagüez, PR 00680&bedrooms=1&bathrooms=1";
+	// console.log(api);
 
 	try {
 		const response = await fetch(api, {
 			method: "POST",
-			body: JSON.stringify(images),
+			body: JSON.stringify({ name, address, images }),
 			headers: {
 				"Content-Type": "application/json",
 				// 'Content-Type': 'application/x-www-form-urlencoded',
@@ -169,10 +170,17 @@ export async function addListing(
 	pet_flag,
 	price
 ) {
-	const api = `/api/listings/?landlord_id=${landlord_id}&property_id=${property_id}&title=${title}&description=${description}&pet_flag=${pet_flag}&price=${price}`;
+	const api = `/api/listings/?landlord_id=${landlord_id}&property_id=${property_id}&pet_flag=${pet_flag}&price=${price}`;
 
 	try {
-		const response = await fetch(api, { method: "POST" });
+		const response = await fetch(api, {
+			method: "POST",
+			body: JSON.stringify({ title, description }),
+			headers: {
+				"Content-Type": "application/json",
+				// 'Content-Type': 'application/x-www-form-urlencoded',
+			},
+		});
 		const data = await response.json();
 
 		if (data === "Not Found") {

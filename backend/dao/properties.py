@@ -18,7 +18,7 @@ class PropertiesDAO:
         cursor.execute(query)
         result = []
         for row in cursor:
-            print(row)
+            # print(row)
             result.append(row)
         cursor.close()
         return result
@@ -29,7 +29,7 @@ class PropertiesDAO:
         cursor.execute(query, (landlord_id,))
         result = []
         for row in cursor:
-            print(row)
+            # print(row)
             result.append(row)
         cursor.close()
         return result
@@ -39,7 +39,7 @@ class PropertiesDAO:
         query = "insert into properties(landlord_id, name, address, bedrooms, bathrooms, pictures) values(%s, %s, %s, %s, %s, %s) returning property_id;"
         cursor = self.conn.cursor()
         cursor.execute(query, (landlord_id, name, address,
-                       bedrooms, bathrooms, pictures))
+                       bedrooms, bathrooms, pictures,))
         self.conn.commit()
         cursor.close()
         return "POST Success"

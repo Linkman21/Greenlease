@@ -57,14 +57,18 @@ def all_properties_endpoint():
 def properties_endpoint():
     landlord_id = request.args.get('landlord_id')
     property_id = request.args.get('property_id')
-    name = request.args.get('name')
-    address = request.args.get('address')
     bedrooms = request.args.get('bedrooms')
     bathrooms = request.args.get('bathrooms')
     content_type = request.headers.get('Content-Type')
+    name = ""
+    address = ""
     pictures = []
     if (content_type == 'application/json'):
-        pictures = request.get_json()
+        data = request.get_json()
+        print(data)
+        name = data['name']
+        address = data['address']
+        pictures = data['images']
     if request.method == "GET":
         return PropertiesHandler().getProperties(landlord_id)
     elif request.method == "POST":
@@ -88,11 +92,17 @@ def all_listings_endpoint():
 def listings_endpoint():
     landlord_id = request.args.get('landlord_id')
     property_id = request.args.get('property_id')
-    title = request.args.get('title')
-    description = request.args.get('description')
     pet_flag = request.args.get('pet_flag')
     price = request.args.get('price')
     listing_id = request.args.get('listing_id')
+    title = ""
+    description = ""
+    content_type = request.headers.get('Content-Type')
+    if (content_type == 'application/json'):
+        data = request.get_json()
+        print(data)
+        title = data['title']
+        description = data['description']
     if request.method == "GET":
         return ListingsHandler().getListings(landlord_id)
     elif request.method == "POST":
