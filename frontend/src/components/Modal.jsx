@@ -18,7 +18,6 @@ import {
 	addTenantRating,
 	deleteListing,
 	deleteProperty,
-	getActiveContracts,
 	postInvoice,
 	requestContract,
 	signContract,
@@ -942,15 +941,8 @@ export function RateContractView({ open, setOpen, contract }) {
 	);
 }
 
-export function CreateInvoiceView({ user, open, setOpen }) {
+export function CreateInvoiceView({ user, open, setOpen, contracts }) {
 	const [loading, setLoading] = useState(true);
-
-	// Contract information
-	const [contracts, setContracts] = useState(null);
-	const handleContracts = async () => {
-		setContracts(await getActiveContracts(user.landlord_id));
-		setLoading(false);
-	};
 
 	// Invoice parameters
 	const [selectedContract, setSelectedContract] = useState(null);
@@ -975,10 +967,6 @@ export function CreateInvoiceView({ user, open, setOpen }) {
 		window.location.reload(false);
 	};
 
-	useEffect(() => {
-		handleContracts();
-	}, []);
-
 	// Handle closing
 	useEffect(() => {
 		if (open) return;
@@ -991,7 +979,15 @@ export function CreateInvoiceView({ user, open, setOpen }) {
 
 	if (!open) return;
 
-	if (!contracts) return <Spinner />;
+	if (contracts == null) {
+		setOpen(false);
+		return <Spinner />;
+	}
+
+	if (contracts.length == 0) {
+		setOpen(false);
+		return alert("No active contracts");
+	}
 
 	return (
 		<Modal

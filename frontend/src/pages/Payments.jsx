@@ -6,6 +6,7 @@ import Button from "react-bootstrap/esm/Button";
 import Row from "react-bootstrap/esm/Row";
 import { useNavigate } from "react-router-dom";
 import {
+	getActiveContracts,
 	getInvoicesPaidLandlord,
 	getInvoicesPaidTenant,
 	getInvoicesPendingLandlord,
@@ -54,6 +55,12 @@ function LandlordPayments({ user }) {
 		setPastPayments(await getInvoicesPaidLandlord(user.landlord_id));
 	};
 
+	// Contract information
+	const [contracts, setContracts] = useState(null);
+	const fetchContracts = async () => {
+		setContracts(await getActiveContracts(user.landlord_id));
+	};
+
 	// Modal handling
 	const [openView, setOpenView] = useState(false);
 
@@ -62,6 +69,7 @@ function LandlordPayments({ user }) {
 		fetchTotalRevenue();
 		fetchPendingPayments();
 		fetchPastPayments();
+		fetchContracts();
 	}, []);
 
 	if (!pendingPayments || !pastPayments) return <Spinner />;
@@ -72,11 +80,9 @@ function LandlordPayments({ user }) {
 			<Row>
 				Total Revenue
 				<div className="total">${!totalRevenue ? 0 : totalRevenue}</div>
-				{pendingPayments.length == 0 ? null : (
-					<Button className="invoice-btn" onClick={() => setOpenView(true)}>
-						Create Invoice +
-					</Button>
-				)}
+				<Button className="invoice-btn" onClick={() => setOpenView(true)}>
+					Create Invoice +
+				</Button>
 			</Row>
 			<Accordion flush alwaysOpen>
 				<Accordion.Item eventKey="0">
@@ -158,7 +164,12 @@ function LandlordPayments({ user }) {
 					</Accordion.Body>
 				</Accordion.Item>
 			</Accordion>
-			<CreateInvoiceView open={openView} setOpen={setOpenView} user={user} />
+			<CreateInvoiceView
+				open={openView}
+				setOpen={setOpenView}
+				user={user}
+				contracts={contracts}
+			/>
 		</>
 	);
 }
